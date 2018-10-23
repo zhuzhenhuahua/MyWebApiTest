@@ -171,6 +171,7 @@
     <Compile Include="Controllers\DataGridController.cs" />
     <Compile Include="Controllers\Demo\DevXtraReportController.cs" />
     <Compile Include="Controllers\Demo\OperFileController.cs" />
+    <Compile Include="Controllers\Demo\VueJSController.cs" />
     <Compile Include="Controllers\Filter\ActionFilter.cs" />
     <Compile Include="Controllers\Filter\ExceptionFilter.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -997,6 +998,7 @@
     <Content Include="Views\MenuOper\Index.cshtml" />
     <Content Include="Views\MenuOper\EditMeunOper.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\VueJS\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
