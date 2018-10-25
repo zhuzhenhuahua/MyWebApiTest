@@ -10,8 +10,9 @@ namespace ConsoleApplicationTest
     {
         static void Main(string[] args)
         {
-            //新的更改
-            Test t = new Test();
+            //webService调用
+            WebReference.ServiceDemo demo = new WebReference.ServiceDemo();
+           string str= demo.GetStr("s");
             Console.Read();
         }
     }

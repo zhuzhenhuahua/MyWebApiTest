@@ -12,25 +12,45 @@ namespace Zzh.Lib.DB.Repositorys
     {
         public async Task<Tuple<int, List<Sys_User>>> GetListAsync(int pageIndex, int pageSize, string userName)
         {
-            int from = (pageIndex - 1) * pageSize;
-            int total = await (from j in context.Sys_Users
-                               where userName == "" ? 1 == 1 : j.Name.Contains(userName)
-                               select j).CountAsync();
-            var list = await (from j in context.Sys_Users
-                              where userName == "" ? 1 == 1 : j.Name.Contains(userName)
-                              orderby j.Uid descending
-                              select j).Skip(from).Take(pageSize).ToListAsync();
-            using (Sys_RoleRepository repoRole = new Sys_RoleRepository())
+            try
             {
-                //这里后期需要优化
-                foreach (var item in list)
+                int from = (pageIndex - 1) * pageSize;
+                int total = await (from j in context.Sys_Users
+                                   where userName == "" ? 1 == 1 : j.Name.Contains(userName)
+                                   select j).CountAsync();
+                var list = await (from j in context.Sys_Users
+                                  where userName == "" ? 1 == 1 : j.Name.Contains(userName)
+                                  orderby j.Uid descending
+                                  select j).Skip(from).Take(pageSize).ToListAsync();
+                using (Sys_RoleRepository repoRole = new Sys_RoleRepository())
                 {
-                    var role = await repoRole.GetRoleAsync(item.RoleId);
-                    if (role != null)
-                        item.RoleName = role.RName;
+                    //这里后期需要优化
+                    foreach (var item in list)
+                    {
+                        var role = await repoRole.GetRoleAsync(item.RoleId);
+                        if (role != null)
+                            item.RoleName = role.RName;
+                    }
                 }
+                return Tuple.Create(total, list);
             }
-            return Tuple.Create(total, list);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public List<Sys_Menu> GetListAsync()
+        {
+            try
+            {
+                var list = context.Sys_Menus.ToList();
+                return list;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public async Task<Sys_User> GetUserAsync(int uid)
