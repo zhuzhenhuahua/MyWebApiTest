@@ -1,0 +1,69 @@
+﻿@using Zzh.Utility;
+<style type="text/css">
+    .products {
+        list-style: none;
+        padding: 0px;
+    }
+
+        .products li {
+            display: inline;
+            float: left;
+            margin: 10px;
+            width: 280px;
+            height: 200px;
+            background-color: sandybrown;
+        }
+
+    .item {
+        display: block;
+        text-decoration: none;
+    }
+
+        .item p {
+            margin: 0;
+            padding-top: 10px;
+            padding-left: 10px;
+            font-weight: bold;
+            text-align: left;
+        }
+</style>
+@*服务端自动生成的hubs文件*@
+<script src="~/signalr/hubs"></script>
+<script type="text/javascript">
+
+    $(function () {
+        var server = $.connection.serverHub;
+        server.client.send = function (msg) {
+            alert("head:" + msg.head + ",body:" + msg.body);
+        }
+        //Start the connection.
+        $.connection.hub.start().done(function () {
+            //alert('创建了一个新的连接');
+            //如果需要给服务端发消息，
+            var msg = {
+                clientIp: "192.168.1.1",
+                head: "标题",
+                body: "这里是内容"
+            };
+            //第一个server是上面的对象，第二个server指发送给服务端
+            //server.server.send(msg);
+        });
+    });
+</script>
+
+<div id="mytaskLitPartial">
+        <ul class="products">
+            <li>
+                <div class="item">
+                    <p>项目：</p>
+                    <p>产品：</p>
+                    <p>任务类型：</p>
+                    <p>任务状态：<span style="font-size:14px;"></span></p>
+                    <p title="" style="height:50px;">
+                        描述：
+                    </p>
+                    <p style="text-align:right;margin-right:15px;"><a href="javascript:void(0)" onclick="showDetails(this)" taskId="">查看</a></p>
+                </div>
+            </li>
+        </ul>
+</div>
