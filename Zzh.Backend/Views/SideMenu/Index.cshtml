@@ -4,48 +4,31 @@
     Layout = "~/Views/Shared/_BaseContent.cshtml";
 }
 
-<h2>Basic SideMenu</h2>
-<p>Collapse the side menu to display the main icon.</p>
 <div style="margin:20px 0;">
     <a href="javascript:;" class="easyui-linkbutton" onclick="toggle()">Toggle</a>
 </div>
-<div id="sm" class="easyui-sidemenu" data-options="data:data"></div>
+@*class="easyui-sidemenu" data-options="data:data"*@
+<div id="sm"></div>
 <script type="text/javascript">
-        var data = [{
-            text: 'Item1',
-            iconCls: 'icon-sum',
-            state: 'open',
-            children: [{
-                text: 'Option1'
-            },{
-                text: 'Option2'
-            },{
-                text: 'Option3',
-                children: [{
-                    text: 'Option31'
-                },{
-                    text: 'Option32'
-                }]
-            }]
-        },{
-            text: 'Item2',
-            iconCls: 'icon-more',
-            children: [{
-                text: 'Option4'
-            },{
-                text: 'Option5'
-            },{
-                text: 'Option6'
-            }]
-        }];
+    var data = [];
+    $(function () {
+        $.post("/Menu/GetAllMenuListTree", "", function (result) {
+            $("#sm").sidemenu({
+                data: result,
+                onSelect: function (item) {
+                    AlertMsg(item.text);
+                }
+            });
+        });
+    });
 
-        function toggle(){
-            var opts = $('#sm').sidemenu('options');
-            $('#sm').sidemenu(opts.collapsed ? 'expand' : 'collapse');
-            opts = $('#sm').sidemenu('options');
-            $('#sm').sidemenu('resize', {
-                width: opts.collapsed ? 60 : 200
-            })
-        }
+
+    //function toggle() {
+    //    var opts = $('#sm').sidemenu('options');
+    //    $('#sm').sidemenu(opts.collapsed ? 'expand' : 'collapse');
+    //    opts = $('#sm').sidemenu('options');
+    //    $('#sm').sidemenu('resize', {
+    //        width: opts.collapsed ? 60 : 200
+    //    })
+    //}
 </script>
-

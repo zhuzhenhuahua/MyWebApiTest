@@ -56,6 +56,36 @@ namespace Zzh.Backend.Controllers
                 return Json(result);
             }
         }
+        public async Task<JsonResult> GetAllMenuListTree()
+        {
+            using (Sys_MenuRepository rep_Menu = new Sys_MenuRepository())
+            {
+                var menuList = await rep_Menu.GetListAsync();//所有菜单
+                List<EasyUiTreeViewModel> TreeView1 = new List<Models.EasyUiTreeViewModel>();
+                foreach (var item in menuList)
+                {
+                    EasyUiTreeViewModel v = new Models.EasyUiTreeViewModel() { id = item.MenuId, text = item.MenuName, children = new List<Models.EasyUiTreeViewModel>() };
+                    var s = FillTree(v, v.id, menuList);
+                    if (s != null || s.id > 0)
+                        TreeView1.Add(s);
+                }
+
+                var json = Json(TreeView1);
+                return json;
+            }
+        }
+        private EasyUiTreeViewModel FillTree(EasyUiTreeViewModel treeNode, int ParentId, List<Sys_Menu> listMenu)
+        {
+            var drs = listMenu.Where(p => p.ParentId == ParentId).ToList();
+            for (int i = 0; i < drs.Count(); i++)
+            {
+                var dr = drs[i];
+                EasyUiTreeViewModel nodeName = new EasyUiTreeViewModel() { id = dr.MenuId, text = dr.MenuName, children = new List<EasyUiTreeViewModel>() };
+                treeNode.children.Add(nodeName);
+                FillTree(nodeName, dr.MenuId, listMenu);
+            }
+            return treeNode;
+        }
         #region 增删改操作
         public async Task<ActionResult> EditMenu(int mid)
         {
@@ -125,7 +155,7 @@ namespace Zzh.Backend.Controllers
         /// <param name="roleMenuOperIds">角色所拥有的MenuOperID列表</param>
         /// <param name="parentId"></param>
         /// <returns></returns>
-        public List<EasyUiTreeViewModel> ConvertMenuToEasyUiTree(List<Sys_Menu> menuList, List<int> roleMenu, List<Sys_MenuOper> menuOperList,List<int> roleMenuOperIds, int parentId = 0)
+        public List<EasyUiTreeViewModel> ConvertMenuToEasyUiTree(List<Sys_Menu> menuList, List<int> roleMenu, List<Sys_MenuOper> menuOperList, List<int> roleMenuOperIds, int parentId = 0)
         {
             List<EasyUiTreeViewModel> treeModeList = new List<Models.EasyUiTreeViewModel>();
             treeModeList.AddRange(menuList.Where(p => p.ParentId == parentId).OrderBy(p => p.MenuSortID).Select(m => new EasyUiTreeViewModel()

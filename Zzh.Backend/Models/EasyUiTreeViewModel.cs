@@ -20,6 +20,10 @@ namespace Zzh.Backend.Models
         /// </summary>
         public bool @checked{get;set;}
         /// <summary>
+        /// 定义是否显示折叠按钮。
+        /// </summary>
+        public bool collapsible { get; set; }
+        /// <summary>
         /// 定义了一些子节点的节点数组。
         /// </summary>
         public List<EasyUiTreeViewModel> children { get; set; }
