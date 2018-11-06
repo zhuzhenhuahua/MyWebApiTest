@@ -1,0 +1,27 @@
+﻿@model SHWY.Model.DB.Sys_User
+@{
+    ViewBag.Title = "EditUser";
+    Layout = "~/Views/Shared/_BaseContent.cshtml";
+}
+<form id="formUserEidt">
+    <table>
+        <tr>
+            <td>@Html.LabelFor(p=>p.Name)</td>
+            <td>@Html.TextBoxFor(p => p.Name, new { @class = "easyui-textbox", data_options = "required:true" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(p=>p.LoginName)</td>
+            <td>@Html.TextBoxFor(p => p.LoginName, new { @class = "easyui-textbox", data_options = "required:true" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(p=>p.PassWord)</td>
+            <td>@Html.TextBoxFor(p => p.PassWord, new { @class = "easyui-textbox", data_options = "required:true" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(p=>p.RoleId)</td>
+            <td>@Html.DropDownListFor(p => p.RoleId,new SelectList(ViewBag.RoleList,"Rid","RName") ,new { @class = "easyui-combobox", data_options = "editable:false", style = "width:170px;" })</td>
+        </tr>
+    </table>
+    <input type="hidden" name="Uid" value="@Model.Uid" />
+</form>
+
