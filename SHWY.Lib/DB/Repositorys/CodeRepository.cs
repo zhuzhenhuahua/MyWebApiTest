@@ -36,50 +36,6 @@ namespace SHWY.Lib.DB.Repositorys
             return codeRepository;
         }
 
-        #region TaskType
-        public async Task<List<CodeTaskType>> GetTaskTypeListAsync()
-        {
-            var list = await (from j in context.TaskTypes
-                              select j).ToListAsync();
-            return list;
-        }
-        static ConcurrentDictionary<int, string> _dicTaskType = new ConcurrentDictionary<int, string>();
-        public async Task<string> GetTaskTypeNameAsync(int id)
-        {
-            if (!_dicTaskType.ContainsKey(id))
-            {
-                var taskType = await (from j in context.TaskTypes.Where(p => p.ID == id)
-                                      select j).FirstOrDefaultAsync();
-                if (taskType != null)
-                    _dicTaskType[id] = taskType.NAME;
-                else
-                    return string.Empty;
-            }
-            return _dicTaskType[id];
-        }
-        #endregion
-        #region TaskStatus
-        public async Task<List<CodeTaskStatus>> GetTaskStatusListAsync()
-        {
-            var list = await (from j in context.TaskStatus
-                              select j).ToListAsync();
-            return list;
-        }
-        static ConcurrentDictionary<int, string> _dicTaskStatus = new ConcurrentDictionary<int, string>();
-        public async Task<string> GetTaskStatusNameAsync(int id)
-        {
-            if (!_dicTaskStatus.ContainsKey(id))
-            {
-                var taskStatus = await (from j in context.TaskStatus.Where(p => p.id == id)
-                                        select j).FirstOrDefaultAsync();
-                if (taskStatus != null)
-                    _dicTaskStatus[id] = taskStatus.name;
-                else
-                    return string.Empty;
-            }
-            return _dicTaskStatus[id];
-        }
-        #endregion
         #region Codes
         static ConcurrentDictionary<int, List<Codes>> _dicCodes = new ConcurrentDictionary<int, List<Codes>>();
         public async Task<List<Codes>> GetCodesListAsync(ECodesTypeId typeId)

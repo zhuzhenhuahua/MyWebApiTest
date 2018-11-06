@@ -67,17 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DB\Context\ProContext.cs" />
-    <Compile Include="DB\Repositorys\ApiManaRepository.cs" />
     <Compile Include="DB\Repositorys\BaseRepository.cs" />
     <Compile Include="DB\Repositorys\CodeRepository.cs" />
-    <Compile Include="DB\Repositorys\ItemsRepository.cs" />
-    <Compile Include="DB\Repositorys\NeedRepository.cs" />
-    <Compile Include="DB\Repositorys\PartyRepository.cs" />
-    <Compile Include="DB\Repositorys\PersonTaskProcessRepository.cs" />
-    <Compile Include="DB\Repositorys\PersonTaskRepository.cs" />
-    <Compile Include="DB\Repositorys\PlanRepository.cs" />
-    <Compile Include="DB\Repositorys\ProductRepository.cs" />
-    <Compile Include="DB\Repositorys\ServerRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_MenuOperRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_MenuRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_RoleMenuRepository.cs" />

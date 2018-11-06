@@ -48,29 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DB\ApiBaseUrl.cs" />
-    <Compile Include="DB\ApiParameter.cs" />
-    <Compile Include="DB\ApiUrl.cs" />
     <Compile Include="DB\Codes.cs" />
     <Compile Include="DB\Configuration\ActConfig.cs" />
     <Compile Include="DB\Configuration\Att\ConfigAttribute.cs" />
-    <Compile Include="DB\DatabaseDeploy.cs" />
-    <Compile Include="DB\InPortOutPort.cs" />
-    <Compile Include="DB\IpAddress.cs" />
-    <Compile Include="DB\Items.cs" />
-    <Compile Include="DB\Need.cs" />
-    <Compile Include="DB\Party.cs" />
-    <Compile Include="DB\PersonTask.cs" />
-    <Compile Include="DB\PersonTaskProcess.cs" />
-    <Compile Include="DB\PlanPoint.cs" />
-    <Compile Include="DB\Plan.cs" />
-    <Compile Include="DB\PlanType.cs" />
-    <Compile Include="DB\ProdDBDeploy.cs" />
-    <Compile Include="DB\ProdModule.cs" />
-    <Compile Include="DB\ProdServerDeploy.cs" />
-    <Compile Include="DB\Product.cs" />
-    <Compile Include="DB\ServerIp.cs" />
-    <Compile Include="DB\Servers.cs" />
     <Compile Include="DB\Sys_Configuration.cs" />
     <Compile Include="DB\Sys_Menu.cs" />
     <Compile Include="DB\Sys_MenuOper.cs" />
@@ -78,9 +58,6 @@
     <Compile Include="DB\Sys_RoleMenu.cs" />
     <Compile Include="DB\Sys_RoleOper.cs" />
     <Compile Include="DB\Sys_User.cs" />
-    <Compile Include="DB\CodeTaskStatus.cs" />
-    <Compile Include="DB\CodeTaskType.cs" />
-    <Compile Include="DB\V_PersonTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XML\soToWmsResponse.cs" />
   </ItemGroup>
