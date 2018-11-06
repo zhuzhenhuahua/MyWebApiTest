@@ -1,0 +1,66 @@
+﻿@model Zzh.Backend.Controllers.Weather
+@{
+    ViewBag.Title = "DataCharts";
+    Layout = "~/Views/Shared/_BaseContent.cshtml";
+}
+<style>
+    .clearfix {
+        zoom: 1;
+        padding-left: 1px;
+    }
+
+        .clearfix li {
+            padding-left: 0;
+            list-style: none;
+            background: #daedff;
+            float: left;
+            height: 240px;
+            margin-left: 2px;
+            margin-right: 2px;
+            margin-top: 5px;
+            position: relative;
+            width: 223px;
+            display: list-item;
+        }
+</style>
+<script type="text/javascript">
+    function getWeather() {
+        var city = $("#txtCity").val();
+        window.location.href = "/DataGrid/DataCharts?city=" + city;
+    }
+</script>
+<div>
+    城市： <input type="text" id="txtCity" /><input type="button" value="获取天气" onclick="getWeather()" />
+    <p> 获取状态：@Model.msg</p>
+    <p>城市：@Model.data.city</p>
+    <p>空气质量指数：@Model.data.aqi</p>
+    <p>温度：@Model.data.wendu</p>
+    <p>注意事项：@Model.data.ganmao</p>
+</div>
+
+<div>
+    <ul class="clearfix">
+        <li>
+            <p>日期：@Model.data.yesterday.date</p>
+            <p>最高温度：@Model.data.yesterday.high</p>
+            <p>风向：@Model.data.yesterday.fx</p>
+            <p>最低温度：@Model.data.yesterday.low</p>
+            <p>风力：@Model.data.yesterday.fl</p>
+            <p>天气：@Model.data.yesterday.type</p>
+        </li>
+
+        @foreach (var item in Model.data.forecast)
+            {
+            <li>
+
+                <p>日期：@item.date</p>
+                <p>最高温度：@item.high</p>
+                <p>风向：@item.fengxiang</p>
+                <p>最低温度：@item.low</p>
+                <p>风力：@item.fengli</p>
+                <p>天气：@item.type</p>
+            </li>
+        }
+
+    </ul>
+</div>

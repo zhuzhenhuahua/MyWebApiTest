@@ -1835,6 +1835,7 @@
     <None Include="Properties\PublishProfiles\PMSWeb.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\Common.js" />
+    <Content Include="Scripts\echarts.common.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -1881,6 +1882,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Home\myTaskType_Partial.cshtml" />
     <Content Include="Views\Shared\_BaseLayOutContent.cshtml" />
+    <Content Include="Views\DataGrid\DataCharts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

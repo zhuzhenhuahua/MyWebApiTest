@@ -29,12 +29,14 @@ namespace Zzh.Backend
                       "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/Content/EasyUiCss").Include(
-"~/Content/jquery-easyui-1.5.3/themes/default/easyui.css",
-"~/Content/jquery-easyui-1.5.3/themes/icon.css"));
+"~/Content/jquery-easyui-1.6.7/themes/default/easyui.css",
+"~/Content/jquery-easyui-1.6.7/themes/icon.css"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryEasyUi").Include(
-                "~/Content/jquery-easyui-1.5.3/jquery.easyui.min.js",
-                "~/Content/jquery-easyui-1.5.3/locale/easyui-lang-zh_CN.js"));
-            bundles.Add(new ScriptBundle("~/bundles/CommonJS").Include("~/Scripts/Common.js"));
+                "~/Content/jquery-easyui-1.6.7/jquery.easyui.min.js",
+                "~/Content/jquery-easyui-1.6.7/locale/easyui-lang-zh_CN.js"));
+            bundles.Add(new ScriptBundle("~/bundles/CommonJS").Include(
+                "~/Scripts/Common.js",
+                 "~/Scripts/echarts.common.min.js"));
         }
     }
 }

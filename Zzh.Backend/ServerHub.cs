@@ -8,10 +8,22 @@ namespace Zzh.Backend
 {
     public class ServerHub : Hub
     {
-        public void Send(SignalRMessage message)
+        /// <summary>
+        /// 向客户端发送消息
+        /// </summary>
+        /// <param name="message"></param>
+        public void Send(SignalRMessage sendMessage)
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<ServerHub>();
-            context.Clients.All.send(message);
+            context.Clients.All.send(sendMessage);
+        }
+        /// <summary>
+        /// 接收客户端发送的消息
+        /// </summary>
+        /// <param name="receiveMessage"></param>
+        public void Receive(SignalRMessage receiveMessage)
+        {
+            var message = receiveMessage;
         }
     }
     /// <summary>

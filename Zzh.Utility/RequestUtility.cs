@@ -97,6 +97,8 @@ namespace Zzh.Utility
         /// <returns>URL编码后的请求数据</returns>
         static string BuildQuery(IDictionary<string, string> parameters, string encode)
         {
+            if (parameters == null || parameters.Count == 0)
+                return string.Empty;
             StringBuilder postData = new StringBuilder();
             bool hasParam = false;
             IEnumerator<KeyValuePair<string, string>> dem = parameters.GetEnumerator();
