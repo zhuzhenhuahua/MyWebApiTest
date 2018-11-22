@@ -117,11 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="names" xml:space="preserve">
-    <value>名字</value>
-  </data>
-  <data name="testName" xml:space="preserve">
-    <value>这是我测试的一个值</value>
-    <comment>这是我测试的一个值的注释</comment>
-  </data>
 </root>

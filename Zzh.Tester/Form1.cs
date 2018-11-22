@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Zzh.Utility;
 using System.Threading;
+using Zzh.Tester.Properties;
+using System.Globalization;
 
 namespace Tester
 {
@@ -18,26 +20,14 @@ namespace Tester
         {
             InitializeComponent();
         }
-        public int threadid = 0;
-        int s = 0;
         private void Form1_Load(object sender, EventArgs e)
         {
-            AsyncHelper.RunAsync(delegate ()
-            {
-                threadid = Thread.CurrentThread.ManagedThreadId;
-                while (s<10)
-                {
-                    s++;
-
-                    Callback();
-                    Thread.Sleep(1000);
-                }
-            }, Callback);
-        }
-        private void Callback()
-        {
-            threadid = Thread.CurrentThread.ManagedThreadId;
-            MessageBox.Show("3:S：" + s);
+            this.label1.Text = Thread.CurrentThread.CurrentCulture.Name;
+            this.label2.Text = Resources.testName;
+            //设置区域
+            Thread.CurrentThread.CurrentUICulture =  new CultureInfo("en-US");
+            this.label3.Text = Resources.testName;
+            this.label4.Text = Resources.names;
         }
     }
 }
