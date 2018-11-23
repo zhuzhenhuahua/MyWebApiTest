@@ -1896,7 +1896,6 @@
     <Content Include="Views\MvcPager\_partialList.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Controllers\Parameters\" />
     <Folder Include="Report\" />
     <Folder Include="Views\Base\" />
