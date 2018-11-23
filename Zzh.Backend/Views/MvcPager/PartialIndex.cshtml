@@ -1,0 +1,21 @@
+﻿@using Webdiyer.WebControls.Mvc;
+@model PagedList<Zzh.Model.DB.Sys_User>
+@{
+    ViewBag.Title = "PartialIndex";
+    Layout = "~/Views/Shared/_BaseContent.cshtml";
+}
+
+@using (Html.BeginForm("PartialIndex", ViewContext.RouteData.GetRequiredString("controller"), new { id = "" }, FormMethod.Post, new { id = "searchForm" }))
+{
+    <span>名字：</span><input type="text" name="title" id="title" style="width:120px" />
+    <input type="submit" value="搜索(S)" accesskey="S" />
+}
+
+<div id="div_table">
+    @Html.Partial("_partialList", Model)
+</div>
+
+@section scripts
+{
+    @{Html.RegisterMvcPagerScriptResource();}
+}

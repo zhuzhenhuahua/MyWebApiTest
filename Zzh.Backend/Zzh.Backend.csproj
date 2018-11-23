@@ -1892,6 +1892,8 @@
     <Content Include="Views\Shared\_BaseLayOutContent.cshtml" />
     <Content Include="Views\DataGrid\DataCharts.cshtml" />
     <Content Include="Views\MvcPager\Index.cshtml" />
+    <Content Include="Views\MvcPager\PartialIndex.cshtml" />
+    <Content Include="Views\MvcPager\_partialList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

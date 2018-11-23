@@ -1,11 +1,7 @@
 ﻿@using Webdiyer.WebControls.Mvc;
 @model PagedList<Zzh.Model.DB.Sys_User>
-@{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_BaseContent.cshtml";
-}
 
-搜索： <input type="text" />
+
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -26,8 +22,13 @@
     </tbody>
 </table>
 <div class="text-center">
-    <nav>
-        @Ajax.Pager(Model, new PagerOptions { PageIndexParameterName = "pageIndex", ContainerTagName = "ul", CssClass = "pagination", CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>", DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>", PagerItemTemplate = "<li>{0}</li>", Id = "bootstrappager" })
-    </nav>
+    @Ajax.Pager(Model, new PagerOptions
+{
+    PageIndexParameterName = "pageIndex",
+    ContainerTagName = "ul",
+    CssClass = "pagination",
+    CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>",
+    DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>",
+    PagerItemTemplate = "<li>{0}</li>"
+},new MvcAjaxOptions {  UpdateTargetId= "div_table",HttpMethod="Post",DataFormId= "searchForm", })
 </div>
-
