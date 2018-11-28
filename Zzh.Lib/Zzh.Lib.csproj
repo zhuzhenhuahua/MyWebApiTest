@@ -98,6 +98,10 @@
       <Project>{c6e0cc01-e41c-4989-8160-6e50d36f66ee}</Project>
       <Name>Zzh.Utility</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Zzh.VM\Zzh.VM.csproj">
+      <Project>{9d07eba5-e9b4-4263-be04-45b3df6a58ed}</Project>
+      <Name>Zzh.VM</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

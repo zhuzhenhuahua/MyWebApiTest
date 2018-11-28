@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Webdiyer.WebControls.Mvc;
+using Zzh.Lib.DB.Context;
 using Zzh.Lib.DB.Repositorys;
 using Zzh.Model.DB;
 
@@ -15,6 +16,12 @@ namespace Zzh.Backend.Controllers.Demo
         public static List<Sys_User> listSource = new List<Sys_User>();
         public MvcPagerController()
         {
+            using (BaseRepository context=new BaseRepository ())
+            {
+                var list = context.context.Sys_Users.ToList();
+                var model = new Sys_User() { Uid = 1, Name = "张", LoginName = "James" };
+               int i= context.Insert<Sys_User>(model);
+            }
             if (listSource.Count == 0)
             {
                 for (int i = 0; i < 1000; i++)

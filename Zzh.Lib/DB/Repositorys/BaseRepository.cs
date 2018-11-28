@@ -23,6 +23,17 @@ namespace Zzh.Lib.DB.Repositorys
             context = new ProContext(conn);
         }
 
+        public virtual int Insert<T>(T model) where T : class, new()
+        {
+            context.Entry<T>(model).State = System.Data.Entity.EntityState.Added;
+            return context.SaveChanges();
+        }
+
+        public virtual int Delete<T>(T model) where T : class, new()
+        {
+            context.Entry<T>(model).State = System.Data.Entity.EntityState.Deleted;
+            return context.SaveChanges();
+        }
         #region IDisposable Support
         private bool disposedValue = false; // 要检测冗余调用
         protected virtual void Dispose(bool disposing)
