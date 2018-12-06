@@ -59,23 +59,5 @@ namespace Zzh.Tester.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   查找类似 名字 的本地化字符串。
-        /// </summary>
-        internal static string names {
-            get {
-                return ResourceManager.GetString("names", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 这是我测试的一个值 的本地化字符串。
-        /// </summary>
-        internal static string testName {
-            get {
-                return ResourceManager.GetString("testName", resourceCulture);
-            }
-        }
     }
 }
