@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Zzh.Backend.Controllers.Filter;
+using Zzh.Utility;
 
 namespace Zzh.Backend.Controllers
 {
@@ -21,6 +22,12 @@ namespace Zzh.Backend.Controllers
         {
             var session = Session["CurrentUser"] as CurrentUser;
             return PartialView();
+        }
+        public JsonResult SetUserThemes(string themesName)
+        {
+            var session = Session["CurrentUser"] as CurrentUser;
+            EasyuiThemesHelper.SetValue(session.Sys_User.Uid, themesName);
+            return Json(new { isOK = true });
         }
     }
 }

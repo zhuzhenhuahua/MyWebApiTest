@@ -7,15 +7,9 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/jquery")
     @Styles.Render("~/Content/EasyUiCss")
-    <link id="easyuiTheme" href="~/Content/jquery-easyui-1.6.7/themes/default/easyui.css" rel="stylesheet" />
+    <link id="easyuiTheme" href="~/Content/jquery-easyui-1.6.7/themes/@ViewData["easyuiTheme"]/easyui.css" rel="stylesheet" />
     @Scripts.Render("~/bundles/jqueryEasyUi")
     @Scripts.Render("~/bundles/CommonJS")
-    <script type="text/javascript">
-        $(function () {
-            var thems=parent.$("#select_changeTheme").combobox("getValue");
-            changeTheme(thems);
-        });
-    </script>
 </head>
 <body>
     @RenderBody()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Zzh.Utility;
 
 namespace Zzh.Backend.Controllers.Filter
 {
@@ -28,6 +29,8 @@ namespace Zzh.Backend.Controllers.Filter
                 //filterContext.Result = new JavaScriptResult() { Script = "alert('dfd')" };
                 //var result= new JavaScriptResult() { Script = "window.top.location.href = '/Account/Login'" };
             }
+            var user = sessionUser as CurrentUser;
+            filterContext.Controller.ViewData["easyuiTheme"] = EasyuiThemesHelper.GetValue(user.Sys_User.Uid);
             base.OnActionExecuting(filterContext);
         }
         /// <summary>
