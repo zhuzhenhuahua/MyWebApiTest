@@ -27,8 +27,13 @@ namespace Zzh.Backend.Controllers.Demo
         // GET: MvcPager
         public ActionResult Index(int pageIndex = 1)
         {
-            var modelList = listSource.ToPagedList(pageIndex, 5);
-            return View(modelList);
+            using (var repo = new ZHSCRB1Repository())
+            {
+                var list = repo.GetList();
+
+                var modelList = listSource.ToPagedList(pageIndex, 5);
+                return View(modelList);
+            }
         }
 
         public ActionResult PartialIndex(int pageIndex = 1, string title = "", string id = "")
