@@ -14,7 +14,7 @@ namespace Zzh.Backend.Controllers.Demo
         [Route("testapi")]
         public string testapi(string msg)
         {
-            SignalRMessage message = new Backend.SignalRMessage("All","testapi", msg);
+            SignalRMessage message = new SignalRMessage("All","testapi", msg);
             ServerHub hub = new ServerHub();
             hub.Send(message);
             return "sucess";

@@ -1,9 +1,20 @@
-﻿
+﻿//V1.0,1
+///升级内容：
+//1：增加方法判断datagrid是否单行选中
+var dataGrid = {
+    IsSelectDataGrid_Tip: function (gridID) {
+        var row = $("#" + gridID).datagrid("getSelected");
+        if (row == null) {
+            AlertMsg("请选择一行数据后再操作");
+            return null;
+        }
+        return row;
+    }
+}
 //修改系统主题
 function changeTheme(themeName) {
     if (themeName == "" || themeName == undefined)
         return;
-    debugger;
     var $easyuiTheme = $('#easyuiTheme');
     var url = $easyuiTheme.attr('href');
     if (!url)

@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Zzh.Lib.DB.Repositorys;
 using Zzh.Backend.Controllers.Filter;
+using Zzh.Utility;
 
 namespace Zzh.Backend.Controllers
 {
@@ -53,6 +54,10 @@ namespace Zzh.Backend.Controllers
         public JsonResult GetSessionUser()
         {
             var user = Session["CurrentUser"] as CurrentUser;
+            if (user != null)
+            {
+                user.Sys_User.Themes = EasyuiThemesHelper.GetValue(user.Sys_User.Uid);
+            }
             return Json(user.Sys_User);
         }
         public JsonResult GetSessionUserExists()

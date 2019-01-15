@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,65 +39,83 @@ namespace Zzh.Utility
         {
             return AppDomain.CurrentDomain.FriendlyName;
         }
+        #endregion
+        #region 获取 本周、本月、本季度、本年 的开始时间或结束时间
         /// <summary>
-        /// 设置本地电脑的年月日
+        /// 获取开始时间
         /// </summary>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <param name="day"></param>
-        public static void SetLocalDate(int year, int month, int day)
+        /// <param name="TimeType">Week、Month、Season、Year</param>
+        /// <param name="now"></param>
+        /// <returns></returns>
+        public static DateTime? GetTimeStartByType(ETimeType TimeType, DateTime now)
         {
-            //实例一个Process类，启动一个独立进程 
-            Process p = new Process();
-            //Process类有一个StartInfo属性 
-            //设定程序名 
-            p.StartInfo.FileName = "cmd.exe";
-            //设定程式执行参数 “/C”表示执行完命令后马上退出
-            p.StartInfo.Arguments = string.Format("/c date {0}-{1}-{2}", year, month, day);
-            //关闭Shell的使用 
-            p.StartInfo.UseShellExecute = false;
-            //重定向标准输入 
-            p.StartInfo.RedirectStandardInput = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            //重定向错误输出 
-            p.StartInfo.RedirectStandardError = true;
-            //设置不显示doc窗口 
-            p.StartInfo.CreateNoWindow = true;
-            //启动 
-            p.Start();
-            //从输出流取得命令执行结果 
-            p.StandardOutput.ReadToEnd();
+            switch (TimeType)
+            {
+                case ETimeType.Week:
+                    return now.AddDays(-(int)now.DayOfWeek + 1);
+                case ETimeType.Month:
+                    return now.AddDays(-now.Day + 1);
+                case ETimeType.Season:
+                    var time = now.AddMonths(0 - ((now.Month - 1) % 3));
+                    return time.AddDays(-time.Day + 1);
+                case ETimeType.Year:
+                    return now.AddDays(-now.DayOfYear + 1);
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
-        /// 设置本机电脑的时分秒
+        /// 获取结束时间
         /// </summary>
-        /// <param name="hour"></param>
-        /// <param name="min"></param>
-        /// <param name="sec"></param>
-        public static void SetLocalTime(int hour, int min, int sec)
+        /// <param name="TimeType">Week、Month、Season、Year</param>
+        /// <param name="now"></param>
+        /// <returns></returns>
+        public static DateTime? GetTimeEndByType(ETimeType TimeType, DateTime now)
         {
-            //实例一个Process类，启动一个独立进程 
-            Process p = new Process();
-            //Process类有一个StartInfo属性 
-            //设定程序名 
-            p.StartInfo.FileName = "cmd.exe";
-            //设定程式执行参数 “/C”表示执行完命令后马上退出
-            p.StartInfo.Arguments = string.Format("/c time {0}:{1}:{2}", hour, min, sec);
-            //关闭Shell的使用 
-            p.StartInfo.UseShellExecute = false;
-            //重定向标准输入 
-            p.StartInfo.RedirectStandardInput = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            //重定向错误输出 
-            p.StartInfo.RedirectStandardError = true;
-            //设置不显示doc窗口 
-            p.StartInfo.CreateNoWindow = true;
-            //启动 
-            p.Start();
-            //从输出流取得命令执行结果 
-            p.StandardOutput.ReadToEnd();
+            switch (TimeType)
+            {
+                case ETimeType.Week:
+                    return now.AddDays(7 - (int)now.DayOfWeek);
+                case ETimeType.Month:
+                    return now.AddMonths(1).AddDays(-now.AddMonths(1).Day + 1).AddDays(-1);
+                case ETimeType.Season:
+                    var time = now.AddMonths((3 - ((now.Month - 1) % 3) - 1));
+                    return time.AddMonths(1).AddDays(-time.AddMonths(1).Day + 1).AddDays(-1);
+                case ETimeType.Year:
+                    var time2 = now.AddYears(1);
+                    return time2.AddDays(-time2.DayOfYear);
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// 获取指定日期，在为一年中为第几周
+        /// </summary>
+        /// <param name="dt">指定时间</param>
+        /// <reutrn>返回第几周</reutrn>
+        public static int GetWeekOfYear(DateTime dt)
+        {
+            GregorianCalendar gc = new GregorianCalendar();
+            int weekOfYear = gc.GetWeekOfYear(dt, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            return weekOfYear;
+        }
+        /// <summary>
+        /// 获取月份
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static int GetMonthOfYear(DateTime dt)
+        {
+            return dt.Month;
         }
         #endregion
+    }
+    public enum ETimeType {
+        Week,
+        Month,
+        Season,
+        Year
     }
 }

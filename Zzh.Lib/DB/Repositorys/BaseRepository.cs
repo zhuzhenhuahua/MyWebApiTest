@@ -11,6 +11,7 @@ namespace Zzh.Lib.DB.Repositorys
     {
         public readonly ProContext context;
 
+        //public ProContext Context => context;
         static object _syncObject = new object();
 
         public BaseRepository()
@@ -22,17 +23,6 @@ namespace Zzh.Lib.DB.Repositorys
             context = new ProContext(conn);
         }
 
-        public virtual int Insert<T>(T model) where T : class, new()
-        {
-            context.Entry<T>(model).State = System.Data.Entity.EntityState.Added;
-            return context.SaveChanges();
-        }
-
-        public virtual int Delete<T>(T model) where T : class, new()
-        {
-            context.Entry<T>(model).State = System.Data.Entity.EntityState.Deleted;
-            return context.SaveChanges();
-        }
         #region IDisposable Support
         private bool disposedValue = false; // 要检测冗余调用
         protected virtual void Dispose(bool disposing)
@@ -59,6 +49,10 @@ namespace Zzh.Lib.DB.Repositorys
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+        #endregion
+
+        #region 公共虚方法
+
         #endregion
     }
 }

@@ -7,11 +7,11 @@
     <title>@ViewBag.Title</title>
 
     @Scripts.Render("~/bundles/jquery")
+    <link id="easyuiTheme" href="~/Content/jquery-easyui-1.6.7/themes/@ViewData["easyuiTheme"]/easyui.css" rel="stylesheet" />
     @Styles.Render("~/Content/EasyUiCss")
-    <link id="easyuiTheme" href="~/Content/jquery-easyui-1.6.7/themes/default/easyui.css" rel="stylesheet" />
     @Scripts.Render("~/bundles/jqueryEasyUi")
     @Scripts.Render("~/bundles/CommonJS")
-    <script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.3.0.min.js"></script>
     <style type="text/css">
         #tab_Content .tabs-panels > .panel > .panel-body {
             overflow: hidden;
@@ -23,6 +23,8 @@
                 var temp = $('#lay').layout('panel', 'center');
                 //2、给区域面板title赋值
                 temp.panel('setTitle', "当前用户：" + result.Name);
+                //设置用户默认的主题
+                $("#select_changeTheme ").combobox('setValue', result.Themes);
             });
             $("#aLoginOut").click(function () {
                 $.messager.confirm('Confirm', 'Are you sure to exit this system?', function (r) {
@@ -32,11 +34,10 @@
                 });
             });
         });
-
     </script>
 </head>
 <body id="lay" class="easyui-layout">
-    <div data-options="region:'north'" style="height:60px;">
+    <div data-options="region:'north'" style="height:56px;">
         @Html.Partial("_PartialHeader")
     </div>
     <div data-options="region:'west',split:true" title='菜单' style="width:200px">
@@ -45,7 +46,7 @@
     </div>
     <div data-options="region:'center',title:'当前用户：',iconCls:'icon-man'">
         <div id="tab_Content" class="easyui-tabs" data-options="fit:true,border:false">
-            <div title="欢迎页" style="padding:5px;overflow:auto;">
+            <div title="待办事项" style="padding:5px;overflow:auto;">
                 @RenderBody()
             </div>
         </div>

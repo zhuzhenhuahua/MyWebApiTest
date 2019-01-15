@@ -10,7 +10,7 @@ using Zzh.Model.DB;
 
 namespace Zzh.Backend.Controllers
 {
-    public class RoleController : Controller
+    public class RoleController : BaseController
     {
         // GET: Role
         public ActionResult Index()

@@ -13,15 +13,18 @@ namespace Zzh.Backend.Controllers
 {
     public class HomeController : BaseController
     {
+        PersonTaskRepository personTaskRepo = new PersonTaskRepository();
+        CodeRepository codeRepo = CodeRepository.CreateInstance();
         public ActionResult Index()
         {
             return View();
         }
 
-        public PartialViewResult myTaskType_Partial()
+        public async Task<PartialViewResult> myTaskType_Partial()
         {
             var session = Session["CurrentUser"] as CurrentUser;
-            return PartialView();
+            var list = await personTaskRepo.GetTaskListAsync(session.Sys_User.Uid);
+            return PartialView(new MyPersonTaskList() { personTaskList = list });
         }
         public JsonResult SetUserThemes(string themesName)
         {
@@ -29,5 +32,9 @@ namespace Zzh.Backend.Controllers
             EasyuiThemesHelper.SetValue(session.Sys_User.Uid, themesName);
             return Json(new { isOK = true });
         }
+    }
+    public class MyPersonTaskList
+    {
+        public List<V_PersonTask> personTaskList { get; set; }
     }
 }

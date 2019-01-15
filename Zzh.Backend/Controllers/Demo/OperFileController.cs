@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Zzh.Backend.Models;
-using Zzh.Lib.Util;
 
 namespace Zzh.Backend.Controllers.Demo
 {
@@ -85,38 +81,6 @@ namespace Zzh.Backend.Controllers.Demo
 
             }
             return null;
-        }
-
-
-        /// <summary>
-        /// 提供下载接口的api
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public HttpResponseMessage DownLoader(string fileNamePara)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(fileNamePara))
-                    return JsonResponseHelper.HttpRMtoJson("参数不能为空", HttpStatusCode.OK, ECustomStatus.Fail);
-                HttpResponseMessage result = null;
-
-                string fileName = AppDomain.CurrentDomain.BaseDirectory + "App_Data\\license.lic";
-                System.IO.File.WriteAllText(fileName, "需要写入的字符串");
-                //读取文件
-                FileStream fs = new FileStream(fileName, FileMode.Open);
-                result = new HttpResponseMessage(HttpStatusCode.OK);
-                result.Content = new StreamContent(fs);
-                result.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-                result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                result.Content.Headers.ContentDisposition.FileName = Path.GetFileName(fileName);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return JsonResponseHelper.HttpRMtoJson(ex.Message, HttpStatusCode.OK, ECustomStatus.Fail);
-            }
-
         }
     }
 }

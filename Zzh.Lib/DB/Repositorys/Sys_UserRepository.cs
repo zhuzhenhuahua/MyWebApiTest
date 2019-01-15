@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Zzh.Model.DB;
+using System.Collections.Concurrent;
 
 namespace Zzh.Lib.DB.Repositorys
 {
     public class Sys_UserRepository : BaseRepository
     {
+        private static ConcurrentDictionary<int, Sys_User> dicUserList = new ConcurrentDictionary<int, Sys_User>();
         public async Task<Tuple<int, List<Sys_User>>> GetListAsync(int pageIndex, int pageSize, string userName)
         {
             int from = (pageIndex - 1) * pageSize;
@@ -49,6 +51,26 @@ namespace Zzh.Lib.DB.Repositorys
                 throw ex;
             }
         }
+        public async Task<Sys_User> GetUserDicAsync(int uid)
+        {
+            if (dicUserList.ContainsKey(uid))
+                return dicUserList[uid];
+            try
+            {
+                var user = await (from j in context.Sys_Users
+                                  where j.Uid == uid
+                                  select j).FirstOrDefaultAsync();
+                if (user != null)
+                {
+                    dicUserList[uid] = user;
+                }
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<List<Sys_User>> GetUserListAsync()
         {
             var list = await (from j in context.Sys_Users
@@ -73,12 +95,13 @@ namespace Zzh.Lib.DB.Repositorys
         {
             try
             {
-                var sysUser = await GetUserAsync(user.Uid);
+                var sysUser = await context.Sys_Users.Where(p => p.Uid == user.Uid).FirstOrDefaultAsync();
                 bool isNew = false;
 
-                if (sysUser.Uid.Equals(0))
+                if (sysUser == null)
                 {
                     isNew = true;
+                    sysUser = new Sys_User();
                 }
                 foreach (var p in sysUser.GetType().GetProperties())
                 {
@@ -94,10 +117,20 @@ namespace Zzh.Lib.DB.Repositorys
                     context.Sys_Users.Add(sysUser);
                 return await context.SaveChangesAsync() == 1;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
+        }
+        public async Task<bool> UpdateTheme(int userID,string theme)
+        {
+            var model = await context.Sys_Users.Where(p => p.Uid == userID).FirstOrDefaultAsync();
+            if (model != null)
+            {
+                model.Themes = theme;
+                return await context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
 
         public async Task<bool> DeleteUser(int uid)
