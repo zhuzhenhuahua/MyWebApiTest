@@ -66,30 +66,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\TaskReport\daily.cs" />
-    <Compile Include="Business\TaskReport\ITaskReport.cs" />
-    <Compile Include="Business\TaskReport\monthly.cs" />
-    <Compile Include="Business\TaskReport\weekly.cs" />
     <Compile Include="DB\Context\ProContext.cs" />
-    <Compile Include="DB\Repositorys\ApiManaRepository.cs" />
     <Compile Include="DB\Repositorys\BaseRepository.cs" />
     <Compile Include="DB\Repositorys\CodeRepository.cs" />
     <Compile Include="DB\Repositorys\CodeTypeRepository.cs" />
-    <Compile Include="DB\Repositorys\ItemsRepository.cs" />
-    <Compile Include="DB\Repositorys\NeedRepository.cs" />
-    <Compile Include="DB\Repositorys\PartyRepository.cs" />
-    <Compile Include="DB\Repositorys\PersonTaskProcessRepository.cs" />
-    <Compile Include="DB\Repositorys\PersonTaskRepository.cs" />
-    <Compile Include="DB\Repositorys\PlanRepository.cs" />
-    <Compile Include="DB\Repositorys\ProductRepository.cs" />
-    <Compile Include="DB\Repositorys\ServerRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_MenuOperRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_MenuRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_RoleMenuRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_RoleOperRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_RoleRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_UserRepository.cs" />
-    <Compile Include="DB\Repositorys\TopicLogRepository.cs" />
     <Compile Include="Log\SHLog4net.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\MDConfigurationManager.cs" />
@@ -99,6 +85,7 @@
     <Compile Include="Util\XMLHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Business\" />
     <Folder Include="Redis\" />
   </ItemGroup>
   <ItemGroup>
