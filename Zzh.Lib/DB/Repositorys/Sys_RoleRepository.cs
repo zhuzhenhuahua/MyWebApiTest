@@ -4,40 +4,41 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Zzh.Lib.DB.Context;
 using Zzh.Model.DB;
 
 namespace Zzh.Lib.DB.Repositorys
 {
-    public class Sys_RoleRepository : BaseRepository
+    public static class Sys_RoleRepository 
     {
-        public async Task<List<Sys_Role>> GetListAsync()
+        public static async Task<List<Sys_Role>> GetListAsync(RepositoryVisiter visiter)
         {
-            var list = await (from j in context.Sys_Roles
+            var list = await (from j in visiter.context.Sys_Roles
                               orderby j.Rid descending
                               select j).ToListAsync();
             return list;
         }
-        public async Task<Tuple<int, List<Sys_Role>>> GetListAsync(int page, int rows, string roleName)
+        public static async Task<Tuple<int, List<Sys_Role>>> GetListAsync(RepositoryVisiter visiter, int page, int rows, string roleName)
         {
             int from = (page - 1) * rows;
-            var total = await (from j in context.Sys_Roles
+            var total = await (from j in visiter.context.Sys_Roles
                                where j.RName.Contains(roleName)
                                select j).CountAsync();
-            var list = await (from j in context.Sys_Roles
+            var list = await (from j in visiter.context.Sys_Roles
                               where j.RName.Contains(roleName)
                               orderby j.Rid descending
                               select j).Skip(from).Take(rows).ToListAsync();
             return Tuple.Create(total, list);
         }
-        public async Task<Sys_Role> GetRoleAsync(int rid)
+        public static async Task<Sys_Role> GetRoleAsync(RepositoryVisiter visiter, int rid)
         {
-            return await context.Sys_Roles.Where(p => p.Rid == rid).FirstOrDefaultAsync();
+            return await visiter.context.Sys_Roles.Where(p => p.Rid == rid).FirstOrDefaultAsync();
         }
-        public async Task<bool> AddOrUpdateAsync(Sys_Role role)
+        public static async Task<bool> AddOrUpdateAsync(RepositoryVisiter visiter, Sys_Role role)
         {
             try
             {
-                var sysRole = await GetRoleAsync(role.Rid);
+                var sysRole = await GetRoleAsync(visiter,role.Rid);
                 bool isNew = false;
 
                 if (sysRole == null)
@@ -56,26 +57,26 @@ namespace Zzh.Lib.DB.Repositorys
                     }
                 }
                 if (isNew)
-                    context.Sys_Roles.Add(sysRole);
-                return await context.SaveChangesAsync() == 1;
+                    visiter.context.Sys_Roles.Add(sysRole);
+                return await visiter.context.SaveChangesAsync() == 1;
             }
             catch (Exception)
             {
                 return false;
             }
         }
-        public async Task<bool> DeleteRoleAsync(int rid)
+        public static async Task<bool> DeleteRoleAsync(RepositoryVisiter visiter, int rid)
         {
-            var role = await context.Sys_Roles.Where(p => p.Rid == rid).FirstOrDefaultAsync();
+            var role = await visiter.context.Sys_Roles.Where(p => p.Rid == rid).FirstOrDefaultAsync();
             if (role != null)
             {
-                var roleMenus = await context.Sys_RoleMenus.Where(p => p.RoleId == rid).ToListAsync();
+                var roleMenus = await visiter.context.Sys_RoleMenus.Where(p => p.RoleId == rid).ToListAsync();
                 if(roleMenus.Count>0)
                 {
-                    context.Sys_RoleMenus.RemoveRange(roleMenus);//删除角色时，先删除角色下所有的菜单
+                    visiter.context.Sys_RoleMenus.RemoveRange(roleMenus);//删除角色时，先删除角色下所有的菜单
                 }
-                context.Sys_Roles.Remove(role);
-                return await context.SaveChangesAsync() > 0;
+                visiter.context.Sys_Roles.Remove(role);
+                return await visiter.context.SaveChangesAsync() > 0;
             }
             return false;
         }

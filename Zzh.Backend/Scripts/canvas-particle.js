@@ -31,9 +31,9 @@ var CanvasParticle = (function(){
 			}
 		};
 
-		// 获取context
+		// 获取visiter.context
 		if(canvas.element.getContext("2d")){
-			canvas.context = canvas.element.getContext("2d");
+			canvas.visiter.context = canvas.element.getContext("2d");
 		}else{
 			return null;
 		}
@@ -71,12 +71,12 @@ var CanvasParticle = (function(){
 
 	// 画点
 	function drawPoint(canvas){
-		var context = canvas.context,
+		var visiter.context = canvas.visiter.context,
 			point,
 			dist;
-		context.clearRect(0, 0, canvas.element.width, canvas.element.height);
-		context.beginPath();
-		context.fillStyle = "rgb("+ canvas.config.color +")";
+		visiter.context.clearRect(0, 0, canvas.element.width, canvas.element.height);
+		visiter.context.beginPath();
+		visiter.context.fillStyle = "rgb("+ canvas.config.color +")";
 		for(var i = 0, len = canvas.config.count; i < len; i++){
 			if(canvas.points.length != canvas.config.count){
 				// 初始化所有点
@@ -90,12 +90,12 @@ var CanvasParticle = (function(){
 				// 处理球的速度和位置，并且做边界处理
 				point =	borderPoint(canvas.points[i], canvas);
 			}
-			context.fillRect(point.x - canvas.config.width / 2, point.y - canvas.config.height / 2, canvas.config.width, canvas.config.height);
+			visiter.context.fillRect(point.x - canvas.config.width / 2, point.y - canvas.config.height / 2, canvas.config.width, canvas.config.height);
 
 			canvas.points[i] = point;
 		}
-		drawLine(context, canvas, canvas.mouse);
-		context.closePath();
+		drawLine(visiter.context, canvas, canvas.mouse);
+		visiter.context.closePath();
 	}
 
 	// 边界处理
@@ -119,8 +119,8 @@ var CanvasParticle = (function(){
 	}
 
 	// 画线
-	function drawLine(context, canvas, mouse){
-		context = context || canvas.context;
+	function drawLine(visiter.context, canvas, mouse){
+		visiter.context = visiter.context || canvas.visiter.context;
 		for(var i = 0, len = canvas.config.count; i < len; i++){
 			// 初始化最大连接数
 			canvas.points[i].max_conn = 0;
@@ -133,12 +133,12 @@ var CanvasParticle = (function(){
 					if(dist <= canvas.config.dist && canvas.points[i].max_conn <canvas.config.max_conn){
 						canvas.points[i].max_conn++;
 						// 距离越远，线条越细，而且越透明
-						context.lineWidth = 0.5 - dist / canvas.config.dist;
-						context.strokeStyle = "rgba("+ canvas.config.stroke + ","+ (1 - dist / canvas.config.dist) +")"
-						context.beginPath();
-						context.moveTo(canvas.points[i].x, canvas.points[i].y);
-						context.lineTo(canvas.points[j].x, canvas.points[j].y);
-						context.stroke();
+						visiter.context.lineWidth = 0.5 - dist / canvas.config.dist;
+						visiter.context.strokeStyle = "rgba("+ canvas.config.stroke + ","+ (1 - dist / canvas.config.dist) +")"
+						visiter.context.beginPath();
+						visiter.context.moveTo(canvas.points[i].x, canvas.points[i].y);
+						visiter.context.lineTo(canvas.points[j].x, canvas.points[j].y);
+						visiter.context.stroke();
 
 					}
 				}
@@ -154,12 +154,12 @@ var CanvasParticle = (function(){
 					canvas.points[i].y = canvas.points[i].y + (mouse.y - canvas.points[i].y) / 20;
 				}
 				if(dist <= canvas.config.e_dist){
-					context.lineWidth = 1;
-					context.strokeStyle = "rgba("+ canvas.config.stroke + ","+ (1 - dist / canvas.config.e_dist) +")";
-					context.beginPath();
-					context.moveTo(canvas.points[i].x, canvas.points[i].y);
-					context.lineTo(mouse.x, mouse.y);
-					context.stroke();
+					visiter.context.lineWidth = 1;
+					visiter.context.strokeStyle = "rgba("+ canvas.config.stroke + ","+ (1 - dist / canvas.config.e_dist) +")";
+					visiter.context.beginPath();
+					visiter.context.moveTo(canvas.points[i].x, canvas.points[i].y);
+					visiter.context.lineTo(mouse.x, mouse.y);
+					visiter.context.stroke();
 				}
 			}
 		}

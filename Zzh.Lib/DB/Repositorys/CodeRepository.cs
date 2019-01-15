@@ -6,46 +6,25 @@ using System.Threading.Tasks;
 using Zzh.Model.DB;
 using System.Collections.Concurrent;
 using System.Data.Entity;
+using Zzh.Lib.DB.Context;
 
 namespace Zzh.Lib.DB.Repositorys
 {
     /// <summary>
     /// 统一字典表的封装类
     /// </summary>
-    public class CodeRepository : BaseRepository
+    public static class CodeRepository 
     {
-        private static CodeRepository codeRepository;
-        private static readonly object locker = new object();
-        /// <summary>
-        /// 此处private不允许new对象，防止使用using释放资源
-        /// </summary>
-        private CodeRepository()
-        {
-
-        }
-        public static CodeRepository CreateInstance()
-        {
-            if (codeRepository == null)
-            {
-                lock (locker)
-                {
-                    if (codeRepository == null)
-                        codeRepository = new CodeRepository();
-                }
-            }
-            return codeRepository;
-        }
-
         #region Codes
         static ConcurrentDictionary<int, List<Codes>> _dicCodes = new ConcurrentDictionary<int, List<Codes>>();
-        public async Task<List<Codes>> GetCodesListAsync(ECodesTypeId typeId)
+        public static async Task<List<Codes>> GetCodesListAsync(RepositoryVisiter visiter, ECodesTypeId typeId)
         {
             int typeid = Convert.ToInt32(typeId);
             if (_dicCodes.ContainsKey(typeid))
             {
                 return _dicCodes[typeid];
             }
-            var list = await (from j in context.Codes
+            var list = await (from j in visiter.context.Codes
                               where j.TypeId == typeid && j.Status == 1
                               select j).ToListAsync();
             if (list.Count > 0)
@@ -54,16 +33,16 @@ namespace Zzh.Lib.DB.Repositorys
             }
             return list;
         }
-        public async Task<List<Codes>> GetCodesListAsync(int typeId)
+        public static async Task<List<Codes>> GetCodesListAsync(RepositoryVisiter visiter, int typeId)
         {
-            var list = await (from j in context.Codes
+            var list = await (from j in visiter.context.Codes
                               where j.TypeId == typeId
                               select j).ToListAsync();
             return list;
         }
-        public async Task<string> GetCodesTextAsync(ECodesTypeId typeid, string code)
+        public static async Task<string> GetCodesTextAsync(RepositoryVisiter visiter, ECodesTypeId typeid, string code)
         {
-            var list = await GetCodesListAsync(typeid);
+            var list = await GetCodesListAsync(visiter,typeid);
             if (list == null || list.Count == 0)
                 return string.Empty;
             var codeModel = list.Where(p => p.Code == code).FirstOrDefault();
@@ -72,7 +51,7 @@ namespace Zzh.Lib.DB.Repositorys
                 return codeModel.Text;
             }
             int typID = Convert.ToInt32(typeid);
-            var codeList = await (from j in context.Codes
+            var codeList = await (from j in visiter.context.Codes
                                   where j.TypeId == typID
                                   select j).ToListAsync();
             if (codeList.Count>0)
@@ -82,15 +61,15 @@ namespace Zzh.Lib.DB.Repositorys
             }
             return string.Empty;
         }
-        public async Task<Codes> GetCodeAsync(int codeId)
+        public static async Task<Codes> GetCodeAsync(RepositoryVisiter visiter, int codeId)
         {
-            var model = await context.Codes.Where(p => p.Id == codeId).FirstOrDefaultAsync();
+            var model = await visiter.context.Codes.Where(p => p.Id == codeId).FirstOrDefaultAsync();
             return model;
         }
-        public async Task<bool> AddOrUpdateCode(Codes codePara)
+        public static async Task<bool> AddOrUpdateCode(RepositoryVisiter visiter, Codes codePara)
         {
             var isAdd = false;
-            var model = await context.Codes.Where(p => p.Id == codePara.Id).FirstOrDefaultAsync();
+            var model = await visiter.context.Codes.Where(p => p.Id == codePara.Id).FirstOrDefaultAsync();
             if (model == null)
             {
                 isAdd = true;
@@ -100,8 +79,8 @@ namespace Zzh.Lib.DB.Repositorys
             model.Text = codePara.Text;
             model.Status = codePara.Status;
             if (isAdd)
-                context.Codes.Add(model);
-            int res = await context.SaveChangesAsync();
+                visiter.context.Codes.Add(model);
+            int res = await visiter.context.SaveChangesAsync();
             if (res > 0)
             {
                 var listCode = new List<Codes>();

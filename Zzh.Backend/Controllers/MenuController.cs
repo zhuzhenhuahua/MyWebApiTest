@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Zzh.Backend.Models;
+using Zzh.Lib.DB.Context;
 using Zzh.Lib.DB.Repositorys;
 using Zzh.Model.DB;
 
@@ -18,27 +19,27 @@ namespace Zzh.Backend.Controllers
         //获取列表分页数据
         public async Task<JsonResult> GetList(int page, int rows, string menuName, int parentId)
         {
-            using (Sys_MenuRepository rep = new Sys_MenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await rep.GetListAsync(page, rows, menuName, parentId);
+                var result = await Sys_MenuRepository.GetListAsync(visiter, page, rows, menuName, parentId);
                 return Json(new { total = result.Item1, rows = result.Item2 });
             }
 
         }
         public async Task<JsonResult> GetTreeList(string menuName, int parentId)
         {
-            using (Sys_MenuRepository rep = new Sys_MenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var treeResult = await rep.GetTreeListAsync(menuName, parentId);
+                var treeResult = await Sys_MenuRepository.GetTreeListAsync(visiter, menuName, parentId);
                 return Json(treeResult);
             }
         }
         public PartialViewResult GetMenuListPartialView()
         {
-            using (Sys_MenuRepository rep = new Sys_MenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
                 var currentUser = Session["CurrentUser"] as CurrentUser;
-                var list = rep.GetMeunListByRoleID(currentUser.Sys_User.RoleId);//该角色下的菜单
+                var list = Sys_MenuRepository.GetMeunListByRoleID(visiter, currentUser.Sys_User.RoleId);//该角色下的菜单
                 return PartialView("_PartialMenu", new MenuListPartial() { list = list });
             }
         }
@@ -49,18 +50,18 @@ namespace Zzh.Backend.Controllers
         //根据父ID获取子菜单列表
         public async Task<JsonResult> GetMeunListByParentID(int parentID)
         {
-            using (Sys_MenuRepository rep = new Sys_MenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await rep.GetListByParentIdAsync(parentID);
+                var result = await Sys_MenuRepository.GetListByParentIdAsync(visiter, parentID);
                 return Json(result);
             }
         }
         //获取所有父级菜单
         public async Task<JsonResult> GetParentMenuList(int isAddAll)
         {
-            using (Sys_MenuRepository rep = new Sys_MenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await rep.GetListByParentIdAsync(0);
+                var result = await Sys_MenuRepository.GetListByParentIdAsync(visiter, 0);
                 if (isAddAll == 1)
                     result.Insert(0, new Sys_Menu() { MenuId = 0, MenuName = "全部" });
                 return Json(result);
@@ -69,9 +70,9 @@ namespace Zzh.Backend.Controllers
         //获取所有二级菜单列表
         public async Task<JsonResult> GetAllChildMeunList(int isAddAll)
         {
-            using (Sys_MenuRepository rep = new Sys_MenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await rep.GetAllChildMeunList();
+                var result = await Sys_MenuRepository.GetAllChildMeunList(visiter);
                 if (isAddAll == 1)
                     result.Insert(0, new Sys_Menu() { MenuId = 0, MenuName = "全部" });
                 return Json(result);
@@ -80,12 +81,12 @@ namespace Zzh.Backend.Controllers
         #region 增删改操作
         public async Task<ActionResult> EditMenu(int mid)
         {
-            using (Sys_MenuRepository rep = new Sys_MenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
                 var menu = new Sys_Menu();
                 if (mid > 0)
-                    menu = await rep.GetMenuAsync(mid);
-                var list = await rep.GetListByParentIdAsync(0);
+                    menu = await Sys_MenuRepository.GetMenuAsync(visiter,mid);
+                var list = await Sys_MenuRepository.GetListByParentIdAsync(visiter,0);
                 var parentMenuList = new List<SelectListItem>()
                 {
                      new SelectListItem() {   Value="0", Text="无", Selected=true}
@@ -98,42 +99,33 @@ namespace Zzh.Backend.Controllers
         }
         public async Task<JsonResult> SaveMenu(Sys_Menu menu)
         {
-            using (Sys_MenuRepository rep = new Sys_MenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await rep.AddOrUpdateAsync(menu);
+                var result = await Sys_MenuRepository.AddOrUpdateAsync(visiter,menu);
                 return Json(new { isOk = result });
             }
         }
         public async Task<JsonResult> DelMenu(int mid)
         {
-            using (Sys_MenuRepository rep = new Sys_MenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await rep.DeleteMenuAsync(mid);
+                var result = await Sys_MenuRepository.DeleteMenuAsync(visiter,mid);
                 return Json(new { isOk = result });
             }
         }
         #endregion
         public async Task<JsonResult> GetMenuListTree(int rid)
         {
-            using (Sys_MenuRepository rep_Menu = new Sys_MenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                using (Sys_RoleMenuRepository rep_RoleMenu = new Sys_RoleMenuRepository())
-                {
-                    using (Sys_MenuOperRepository rep_menuOper = new Sys_MenuOperRepository())
-                    {
-                        using (Sys_RoleOperRepository rep_roleOper = new Sys_RoleOperRepository())
-                        {
-                            var menuList = await rep_Menu.GetListAsync();//所有菜单
-                            var roleMenu = await rep_RoleMenu.GetListAsync(rid);//该角色已经有的菜单ID
-                            List<int> menuIds = roleMenu.Select(p => p.MenuId).ToList();
-                            var meunOperList = await rep_menuOper.GetListAsync();//所有菜单操作按钮
-                            var roleMenuOper = await rep_roleOper.GetListAsync(rid);//该角色已经有的菜单操作按钮ID
-                            List<int> menuOperIds = roleMenuOper.Select(p => p.MenuOperId).ToList();
-                            var result = ConvertMenuToEasyUiTree(menuList, menuIds, meunOperList, menuOperIds);
-                            return Json(result);
-                        }
-                    }
-                }
+                var menuList = await Sys_MenuRepository.GetListAsync(visiter);//所有菜单
+                var roleMenu = await Sys_RoleMenuRepository.GetListAsync(visiter, rid);//该角色已经有的菜单ID
+                List<int> menuIds = roleMenu.Select(p => p.MenuId).ToList();
+                var meunOperList = await Sys_MenuOperRepository.GetListAsync(visiter);//所有菜单操作按钮
+                var roleMenuOper = await Sys_RoleOperRepository.GetListAsync(visiter, rid);//该角色已经有的菜单操作按钮ID
+                List<int> menuOperIds = roleMenuOper.Select(p => p.MenuOperId).ToList();
+                var result = ConvertMenuToEasyUiTree(menuList, menuIds, meunOperList, menuOperIds);
+                return Json(result);
             }
         }
 

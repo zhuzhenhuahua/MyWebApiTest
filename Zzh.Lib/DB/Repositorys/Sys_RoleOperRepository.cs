@@ -4,15 +4,16 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Zzh.Lib.DB.Context;
 using Zzh.Model.DB;
 
 namespace Zzh.Lib.DB.Repositorys
 {
-    public class Sys_RoleOperRepository : BaseRepository
+    public static class Sys_RoleOperRepository 
     {
-        public async Task<List<Sys_RoleOper>> GetListAsync(int roleId)
+        public static async Task<List<Sys_RoleOper>> GetListAsync(RepositoryVisiter visiter, int roleId)
         {
-            return await context.Sys_RoleOpers.Where(p => p.RoleId == roleId).ToListAsync();
+            return await visiter.context.Sys_RoleOpers.Where(p => p.RoleId == roleId).ToListAsync();
         }
     }
 }

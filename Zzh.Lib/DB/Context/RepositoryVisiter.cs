@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Zzh.Lib.DB.Context;
 
-namespace Zzh.Lib.DB.Repositorys
+namespace Zzh.Lib.DB.Context
 {
-    public class BaseRepository : IDisposable
+    public class RepositoryVisiter : IDisposable
     {
         public readonly ProContext context;
 
-        //public ProContext Context => context;
+        //public ProContext Context => visiter.context;
         static object _syncObject = new object();
 
-        public BaseRepository()
+        public RepositoryVisiter()
         {
             context = new ProContext();
         }
-        public BaseRepository(string conn)
+        public RepositoryVisiter(string conn)
         {
             context = new ProContext(conn);
         }

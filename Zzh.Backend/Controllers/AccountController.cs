@@ -7,15 +7,13 @@ using System.Web.Mvc;
 using Zzh.Lib.DB.Repositorys;
 using Zzh.Backend.Controllers.Filter;
 using Zzh.Utility;
+using Zzh.Lib.DB.Context;
 
 namespace Zzh.Backend.Controllers
 {
     //该类作为登录验证，暂不继承BaseController，如果后期需要继承，则在filter中判断
     public class AccountController : Controller
     {
-        Sys_UserRepository userRepo = new Sys_UserRepository();
-        Sys_RoleMenuRepository repo_RoleMeun = new Sys_RoleMenuRepository();
-        Sys_RoleOperRepository repo_RoleOper = new Sys_RoleOperRepository();
         // GET: Account
         public ActionResult Login()
         {
@@ -36,19 +34,22 @@ namespace Zzh.Backend.Controllers
                 ViewData["errorMsg"] = "密码不能为空";
                 return View("Login", viewModel);
             }
-            var userModel = await userRepo.GetUserAsync(viewModel.LoginName, viewModel.Password);
-            if (userModel == null)
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                ViewData["errorMsg"] = "账号或密码输入错误";
-                return View("Login", viewModel);
+                var userModel = await Sys_UserRepository.GetUserAsync(visiter,viewModel.LoginName, viewModel.Password);
+                if (userModel == null)
+                {
+                    ViewData["errorMsg"] = "账号或密码输入错误";
+                    return View("Login", viewModel);
+                }
+                CurrentUser currentUser = new CurrentUser();
+                currentUser.Sys_User = userModel;
+                //currentUser.Sys_RoleMenu = await Sys_RoleMenuRepository.GetListAsync(userModel.RoleId);
+                //currentUser.Sys_RoleOper = await Sys_RoleOperRepository.GetListAsync(userModel.RoleId);
+                Session["CurrentUser"] = currentUser;
+                Session.Timeout = 180;//登录过期时间（分钟）
+                return Redirect("/Home/Index");
             }
-            CurrentUser currentUser = new CurrentUser();
-            currentUser.Sys_User = userModel;
-            //currentUser.Sys_RoleMenu = await repo_RoleMeun.GetListAsync(userModel.RoleId);
-            //currentUser.Sys_RoleOper = await repo_RoleOper.GetListAsync(userModel.RoleId);
-            Session["CurrentUser"] = currentUser;
-            Session.Timeout = 180;//登录过期时间（分钟）
-            return Redirect("/Home/Index"); ; 
 
         }
         public JsonResult GetSessionUser()

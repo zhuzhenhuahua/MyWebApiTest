@@ -13,7 +13,6 @@ namespace Zzh.Backend.Controllers
 {
     public class HomeController : BaseController
     {
-        CodeRepository codeRepo = CodeRepository.CreateInstance();
         public ActionResult Index()
         {
             return View();

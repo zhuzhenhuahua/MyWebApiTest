@@ -6,40 +6,38 @@ using System.Text;
 using System.Threading.Tasks;
 using Zzh.Model.DB;
 using System.Collections.Concurrent;
+using Zzh.Lib.DB.Context;
 
 namespace Zzh.Lib.DB.Repositorys
 {
-    public class Sys_UserRepository : BaseRepository
+    public static class Sys_UserRepository
     {
         private static ConcurrentDictionary<int, Sys_User> dicUserList = new ConcurrentDictionary<int, Sys_User>();
-        public async Task<Tuple<int, List<Sys_User>>> GetListAsync(int pageIndex, int pageSize, string userName)
+        public static async Task<Tuple<int, List<Sys_User>>> GetListAsync(RepositoryVisiter visiter, int pageIndex, int pageSize, string userName)
         {
             int from = (pageIndex - 1) * pageSize;
-            int total = await (from j in context.Sys_Users
+            int total = await (from j in visiter.context.Sys_Users
                                where userName == "" ? 1 == 1 : j.Name.Contains(userName)
                                select j).CountAsync();
-            var list = await (from j in context.Sys_Users
+            var list = await (from j in visiter.context.Sys_Users
                               where userName == "" ? 1 == 1 : j.Name.Contains(userName)
                               orderby j.Uid descending
                               select j).Skip(from).Take(pageSize).ToListAsync();
-            using (Sys_RoleRepository repoRole = new Sys_RoleRepository())
-            {
                 //这里后期需要优化
                 foreach (var item in list)
                 {
-                    var role = await repoRole.GetRoleAsync(item.RoleId);
+                    var role = await Sys_RoleRepository.GetRoleAsync(visiter,item.RoleId);
                     if (role != null)
                         item.RoleName = role.RName;
                 }
-            }
             return Tuple.Create(total, list);
         }
 
-        public async Task<Sys_User> GetUserAsync(int uid)
+        public static async Task<Sys_User> GetUserAsync(RepositoryVisiter visiter, int uid)
         {
             try
             {
-                var user = await (from j in context.Sys_Users
+                var user = await (from j in visiter.context.Sys_Users
                                   where j.Uid == uid
                                   select j).FirstOrDefaultAsync();
                 if (user == null)
@@ -51,13 +49,13 @@ namespace Zzh.Lib.DB.Repositorys
                 throw ex;
             }
         }
-        public async Task<Sys_User> GetUserDicAsync(int uid)
+        public static async Task<Sys_User> GetUserDicAsync(RepositoryVisiter visiter, int uid)
         {
             if (dicUserList.ContainsKey(uid))
                 return dicUserList[uid];
             try
             {
-                var user = await (from j in context.Sys_Users
+                var user = await (from j in visiter.context.Sys_Users
                                   where j.Uid == uid
                                   select j).FirstOrDefaultAsync();
                 if (user != null)
@@ -71,31 +69,31 @@ namespace Zzh.Lib.DB.Repositorys
                 throw ex;
             }
         }
-        public async Task<List<Sys_User>> GetUserListAsync()
+        public static async Task<List<Sys_User>> GetUserListAsync(RepositoryVisiter visiter)
         {
-            var list = await (from j in context.Sys_Users
+            var list = await (from j in visiter.context.Sys_Users
                               orderby j.Name
                               select j).ToListAsync();
             return list;
         }
-        public async Task<int> GetUserListCountByRoleID(int roleID)
+        public static async Task<int> GetUserListCountByRoleID(RepositoryVisiter visiter, int roleID)
         {
-            var total = await context.Sys_Users.Where(p => p.RoleId == roleID).CountAsync();
+            var total = await visiter.context.Sys_Users.Where(p => p.RoleId == roleID).CountAsync();
             return total;
         }
-        public async Task<Sys_User> GetUserAsync(string loginName, string pwd)
+        public static async Task<Sys_User> GetUserAsync(RepositoryVisiter visiter, string loginName, string pwd)
         {
-            var user = await (from j in context.Sys_Users
+            var user = await (from j in visiter.context.Sys_Users
                               where j.LoginName == loginName && j.PassWord == pwd
                               select j).FirstOrDefaultAsync();
             return user;
         }
         #region 增删改
-        public async Task<bool> AddOrUpdateAsync(Sys_User user)
+        public static async Task<bool> AddOrUpdateAsync(RepositoryVisiter visiter, Sys_User user)
         {
             try
             {
-                var sysUser = await context.Sys_Users.Where(p => p.Uid == user.Uid).FirstOrDefaultAsync();
+                var sysUser = await visiter.context.Sys_Users.Where(p => p.Uid == user.Uid).FirstOrDefaultAsync();
                 bool isNew = false;
 
                 if (sysUser == null)
@@ -114,32 +112,32 @@ namespace Zzh.Lib.DB.Repositorys
                     }
                 }
                 if (isNew)
-                    context.Sys_Users.Add(sysUser);
-                return await context.SaveChangesAsync() == 1;
+                    visiter.context.Sys_Users.Add(sysUser);
+                return await visiter.context.SaveChangesAsync() == 1;
             }
             catch
             {
                 return false;
             }
         }
-        public async Task<bool> UpdateTheme(int userID,string theme)
+        public static async Task<bool> UpdateTheme(RepositoryVisiter visiter, int userID,string theme)
         {
-            var model = await context.Sys_Users.Where(p => p.Uid == userID).FirstOrDefaultAsync();
+            var model = await visiter.context.Sys_Users.Where(p => p.Uid == userID).FirstOrDefaultAsync();
             if (model != null)
             {
                 model.Themes = theme;
-                return await context.SaveChangesAsync() > 0;
+                return await visiter.context.SaveChangesAsync() > 0;
             }
             return false;
         }
 
-        public async Task<bool> DeleteUser(int uid)
+        public static async Task<bool> DeleteUser(RepositoryVisiter visiter, int uid)
         {
-            var user = await context.Sys_Users.Where(p => p.Uid == uid).FirstOrDefaultAsync();
+            var user = await visiter.context.Sys_Users.Where(p => p.Uid == uid).FirstOrDefaultAsync();
             if (user != null)
             {
-                context.Sys_Users.Remove(user);
-                return await context.SaveChangesAsync() == 1;
+                visiter.context.Sys_Users.Remove(user);
+                return await visiter.context.SaveChangesAsync() == 1;
             }
             return false;
         }

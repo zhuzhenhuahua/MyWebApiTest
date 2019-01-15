@@ -4,38 +4,39 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Zzh.Lib.DB.Context;
 using Zzh.Model.DB;
 
 namespace Zzh.Lib.DB.Repositorys
 {
-    public class Sys_MenuRepository : BaseRepository
+    public static class Sys_MenuRepository 
     {
-        public async Task<List<Sys_Menu>> GetListAsync()
+        public static async Task<List<Sys_Menu>> GetListAsync(RepositoryVisiter visiter)
         {
-            var list = await (from j in context.Sys_Menus
+            var list = await (from j in visiter.context.Sys_Menus
                               orderby  j.MenuSortID,j.MenuId
                               select j).ToListAsync();
             return list;
         }
-        public List<Sys_Menu> GetList()
+        public static List<Sys_Menu> GetList(RepositoryVisiter visiter)
         {
-            var list = (from j in context.Sys_Menus
+            var list = (from j in visiter.context.Sys_Menus
                         orderby j.MenuSortID, j.MenuId
                         select j).ToList();
             return list;
         }
-        public List<Sys_Menu> GetMeunListByRoleID(int roleID)
+        public static List<Sys_Menu> GetMeunListByRoleID(RepositoryVisiter visiter, int roleID)
         {
-            var list = (from j in context.Sys_Menus
-                        join roleMenu in context.Sys_RoleMenus on j.MenuId equals roleMenu.MenuId
+            var list = (from j in visiter.context.Sys_Menus
+                        join roleMenu in visiter.context.Sys_RoleMenus on j.MenuId equals roleMenu.MenuId
                         where roleMenu.RoleId == roleID
                         orderby j.MenuSortID
                         select j).ToList();
             return list;
         }
-        public async Task<List<Sys_Menu>> GetTreeListAsync(string menuName, int parentId)
+        public static async Task<List<Sys_Menu>> GetTreeListAsync(RepositoryVisiter visiter, string menuName, int parentId)
         {
-            var list = await context.Sys_Menus.OrderBy(p=>p.MenuSortID).ToListAsync();
+            var list = await visiter.context.Sys_Menus.OrderBy(p=>p.MenuSortID).ToListAsync();
             List<Sys_Menu> treeList = new List<Sys_Menu>();
             treeList = list.Where(p => p.ParentId == parentId).ToList();
             foreach (var item in treeList)
@@ -44,27 +45,27 @@ namespace Zzh.Lib.DB.Repositorys
             }
             return treeList;
         }
-        public async Task<Tuple<int, List<Sys_Menu>>> GetListAsync(int page, int rows, string menuName, int parentId)
+        public static async Task<Tuple<int, List<Sys_Menu>>> GetListAsync(RepositoryVisiter visiter, int page, int rows, string menuName, int parentId)
         {
             int from = (page - 1) * rows;
-            var total = await (from j in context.Sys_Menus
+            var total = await (from j in visiter.context.Sys_Menus
                                where (j.MenuName.Contains(menuName)) && (parentId > 0 ? j.ParentId == parentId : 1 == 1)
                                select j).CountAsync();
-            var list = await (from j in context.Sys_Menus
+            var list = await (from j in visiter.context.Sys_Menus
                               where (j.MenuName.Contains(menuName)) && (parentId > 0 ? j.ParentId == parentId : 1 == 1)
                               orderby j.MenuId, j.MenuSortID
                               select j).Skip(from).Take(rows).ToListAsync();
             return Tuple.Create(total, list);
         }
-        public async Task<Sys_Menu> GetMenuAsync(int menuId)
+        public static async Task<Sys_Menu> GetMenuAsync(RepositoryVisiter visiter, int menuId)
         {
-            return await context.Sys_Menus.Where(p => p.MenuId == menuId).FirstOrDefaultAsync();
+            return await visiter.context.Sys_Menus.Where(p => p.MenuId == menuId).FirstOrDefaultAsync();
         }
-        public async Task<bool> AddOrUpdateAsync(Sys_Menu menu)
+        public static async Task<bool> AddOrUpdateAsync(RepositoryVisiter visiter, Sys_Menu menu)
         {
             try
             {
-                var sysMenu = await GetMenuAsync(menu.MenuId);
+                var sysMenu = await GetMenuAsync(visiter,menu.MenuId);
                 bool isNew = false;
 
                 if (sysMenu == null)
@@ -83,31 +84,31 @@ namespace Zzh.Lib.DB.Repositorys
                     }
                 }
                 if (isNew)
-                    context.Sys_Menus.Add(sysMenu);
-                return await context.SaveChangesAsync() == 1;
+                    visiter.context.Sys_Menus.Add(sysMenu);
+                return await visiter.context.SaveChangesAsync() == 1;
             }
             catch (Exception)
             {
                 return false;
             }
         }
-        public async Task<bool> DeleteMenuAsync(int menuId)
+        public static async Task<bool> DeleteMenuAsync(RepositoryVisiter visiter, int menuId)
         {
-            var menu = await context.Sys_Menus.Where(p => p.MenuId == menuId).FirstOrDefaultAsync();
+            var menu = await visiter.context.Sys_Menus.Where(p => p.MenuId == menuId).FirstOrDefaultAsync();
             if (menu != null)
             {
-                context.Sys_Menus.Remove(menu);
-                return await context.SaveChangesAsync() == 1;
+                visiter.context.Sys_Menus.Remove(menu);
+                return await visiter.context.SaveChangesAsync() == 1;
             }
             return false;
         }
-        public async Task<List<Sys_Menu>> GetListByParentIdAsync(int parentId)
+        public static async Task<List<Sys_Menu>> GetListByParentIdAsync(RepositoryVisiter visiter, int parentId)
         {
-            return await context.Sys_Menus.Where(p => p.ParentId == parentId).OrderBy(p => p.MenuSortID).ToListAsync();
+            return await visiter.context.Sys_Menus.Where(p => p.ParentId == parentId).OrderBy(p => p.MenuSortID).ToListAsync();
         }
-        public async Task<List<Sys_Menu>> GetAllChildMeunList()
+        public static async Task<List<Sys_Menu>> GetAllChildMeunList(RepositoryVisiter visiter)
         {
-            return await context.Sys_Menus.Where(p => p.ParentId > 0).ToListAsync();
+            return await visiter.context.Sys_Menus.Where(p => p.ParentId > 0).ToListAsync();
         }
     }
 }

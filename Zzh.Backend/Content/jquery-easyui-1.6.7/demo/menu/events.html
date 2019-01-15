@@ -27,7 +27,7 @@
 			$('#log').prepend('<p>Click Item: '+item.name+'</p>');
 		}
 		$(function(){
-			$(document).bind('contextmenu',function(e){
+			$(document).bind('visiter.contextmenu',function(e){
 				e.preventDefault();
 				$('#mm').menu('show', {
 					left: e.pageX,

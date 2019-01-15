@@ -81,18 +81,18 @@
 	$.parser = {
 		auto: true,
 		emptyFn: function(){},
-		onComplete: function(context){},
+		onComplete: function(visiter.context){},
 		plugins:['draggable','droppable','resizable','pagination','tooltip',
 		         'linkbutton','menu','sidemenu','menubutton','splitbutton','switchbutton','progressbar','radiobutton','checkbox',
 				 'tree','textbox','passwordbox','maskedbox','filebox','combo','combobox','combotree','combogrid','combotreegrid','tagbox','numberbox','validatebox','searchbox',
 				 'spinner','numberspinner','timespinner','datetimespinner','calendar','datebox','datetimebox','slider',
 				 'layout','panel','datagrid','propertygrid','treegrid','datalist','tabs','accordion','window','dialog','form'
 		],
-		parse: function(context){
+		parse: function(visiter.context){
 			var aa = [];
 			for(var i=0; i<$.parser.plugins.length; i++){
 				var name = $.parser.plugins[i];
-				var r = $('.easyui-' + name, context);
+				var r = $('.easyui-' + name, visiter.context);
 				if (r.length){
 					if (r[name]){
 						r.each(function(){
@@ -116,10 +116,10 @@
 							$(this)[name]($.data(this, 'options')||{});
 						});
 					}
-					$.parser.onComplete.call($.parser, context);
+					$.parser.onComplete.call($.parser, visiter.context);
 				});
 			} else {
-				$.parser.onComplete.call($.parser, context);
+				$.parser.onComplete.call($.parser, visiter.context);
 			}
 		},
 		
@@ -389,7 +389,7 @@
 //			e.preventDefault();
 		}
 		longTouchTimer = setTimeout(function(){
-			fire(e, 'contextmenu', 3);
+			fire(e, 'visiter.contextmenu', 3);
 		}, 1000);
 		fire(e, 'mousedown');
 		if ($.fn.draggable.isDragging || $.fn.resizable.isResizing){

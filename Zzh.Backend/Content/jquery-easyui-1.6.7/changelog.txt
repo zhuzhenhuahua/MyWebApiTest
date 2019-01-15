@@ -310,7 +310,7 @@ Version 1.3.4
  * combobox: The onLoadSuccess event fires when parsing empty local data. fixed.
  * form: Calling 'reset' method can not reset datebox field. fixed.
 * Improvement
- * mobile: The context menu and double click features are supported on mobile devices.
+ * mobile: The visiter.context menu and double click features are supported on mobile devices.
  * combobox: The 'groupField' and 'groupFormatter' options are available to display items in groups.
  * tree: When append or insert nodes, the 'data' parameter accepts one or more nodes data.
  * tree: The 'getChecked' method accepts a single 'state' or an array of 'state'.

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Zzh.Lib.DB.Context;
 using Zzh.Lib.DB.Repositorys;
 using Zzh.Model.DB;
 
@@ -19,53 +20,49 @@ namespace Zzh.Backend.Controllers
         }
         public async Task<JsonResult> GetList(int rows, int page, string roleName)
         {
-            using (Sys_RoleRepository rep = new Sys_RoleRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await rep.GetListAsync(page, rows, roleName);
+                var result = await Sys_RoleRepository.GetListAsync(visiter,page, rows, roleName);
                 return Json(new { total = result.Item1, rows = result.Item2 });
             }
 
         }
         public async Task<JsonResult> GetlistAll()
         {
-            using (Sys_RoleRepository rep = new Sys_RoleRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await rep.GetListAsync();
+                var result = await Sys_RoleRepository.GetListAsync(visiter);
                 return Json(result);
             }
         }
         public async Task<ActionResult> EditRole(int rid)
         {
-            using (Sys_RoleRepository rep = new Sys_RoleRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
                 var role = new Sys_Role();
                 if (rid > 0)
-                    role = await rep.GetRoleAsync(rid);
+                    role = await Sys_RoleRepository.GetRoleAsync(visiter, rid);
                 return View(role);
             }
         }
         public async Task<JsonResult> SaveRole(Sys_Role role)
         {
-            using (Sys_RoleRepository rep = new Sys_RoleRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await rep.AddOrUpdateAsync(role);
+                var result = await Sys_RoleRepository.AddOrUpdateAsync(visiter, role);
                 return Json(new { isOk = result });
             }
         }
         public async Task<JsonResult> DelRole(int rid)
         {
-            using (Sys_RoleRepository rep = new Sys_RoleRepository())
+            using(RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                using (Sys_UserRepository userRepo = new Sys_UserRepository())
-                {
-                    var userTotal = await userRepo.GetUserListCountByRoleID(rid);
+                var userTotal = await Sys_UserRepository.GetUserListCountByRoleID(visiter, rid);
                     if (userTotal > 0)
                         return Json(new { isOk = false, msg = "请先删除该角色下的用户" });
-                    var result = await rep.DeleteRoleAsync(rid);
+                    var result = await Sys_RoleRepository.DeleteRoleAsync(visiter, rid);
                     return Json(new { isOk = result });
                 }
-
-            }
         }
 
         public ActionResult RoleMenuIndex(int rid)
@@ -76,12 +73,12 @@ namespace Zzh.Backend.Controllers
 
         public async Task<JsonResult> SaveRoleMenu(int roleId, List<int> checkedIdList)
         {
-            using (Sys_RoleMenuRepository repo = new Sys_RoleMenuRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
                 bool result = false;
                 if (roleId > 0 && checkedIdList.Count > 0)
                 {
-                    result = await repo.SaveRoleMenuAsync(roleId, checkedIdList);
+                    result = await Sys_RoleMenuRepository.SaveRoleMenuAsync(visiter, roleId, checkedIdList);
                 }
                 return Json(new { isOK = result });
             }

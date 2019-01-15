@@ -6,12 +6,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Zzh.Lib.DB.Context;
 
 namespace Zzh.Backend.Controllers
 {
     public class CodesController : BaseController
     {
-        CodeRepository codeRepo = CodeRepository.CreateInstance();
         // GET: Codes
         public ActionResult Index()
         {
@@ -19,41 +19,50 @@ namespace Zzh.Backend.Controllers
         }
         public async Task<JsonResult> GetCodeListByTypeID(int typeId)
         {
-            var list = await codeRepo.GetCodesListAsync(typeId);
-            return Json(new { rows = list });
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
+            {
+                var list = await CodeRepository.GetCodesListAsync(visiter,typeId);
+                return Json(new { rows = list });
+            }
         }
         public async Task<ActionResult> CodeEdit(int codeID,int typeID)
         {
-            var model = await codeRepo.GetCodeAsync(codeID);
-            if (model == null)
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                model = new Codes() { Status = 1, TypeId=typeID };
+                var model = await CodeRepository.GetCodeAsync(visiter, codeID);
+                if (model == null)
+                {
+                    model = new Codes() { Status = 1, TypeId = typeID };
+                }
+                var StatusList = new List<SelectListItem>();
+                StatusList.Add(new SelectListItem() { Value = "1", Text = "正常显示", Selected = true });
+                StatusList.Add(new SelectListItem() { Value = "0", Text = "隐藏" });
+                ViewBag.StatusList = StatusList;
+                return View(model);
             }
-            var StatusList = new List<SelectListItem>();
-            StatusList.Add(new SelectListItem() { Value = "1", Text = "正常显示", Selected = true });
-            StatusList.Add(new SelectListItem() { Value = "0", Text = "隐藏" });
-            ViewBag.StatusList = StatusList;
-            return View(model);
         }
         public async Task<JsonResult> SaveCode(Codes codePara)
         {
-            var result =await codeRepo.AddOrUpdateCode(codePara);
-            return Json(new { isOk = result });
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
+            {
+                var result = await CodeRepository.AddOrUpdateCode(visiter, codePara);
+                return Json(new { isOk = result });
+            }
         }
         #region CodeType
         public async Task<JsonResult> GetCodeTypeList(int page, int rows, string typeName)
         {
-            using (CodeTypeRepository repoCodeType = new CodeTypeRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var tuple = await repoCodeType.GetCodeTypeListAsync(page, rows, typeName);
+                var tuple = await CodeTypeRepository.GetCodeTypeListAsync(visiter, page, rows, typeName);
                 return Json(new { total = tuple.Item1, rows = tuple.Item2 });
             }
         }
         public async Task<ActionResult> CodeTypeEdit(int typeId)
         {
-            using (CodeTypeRepository repoCodeType = new CodeTypeRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var model = await repoCodeType.GetCodeTypeAsync(typeId);
+                var model = await CodeTypeRepository.GetCodeTypeAsync(visiter, typeId);
                 if (model == null)
                     model = new CodeType();
                 return View(model);
@@ -61,17 +70,17 @@ namespace Zzh.Backend.Controllers
         }
         public async Task<JsonResult> SaveCodeType(CodeType modelPara)
         {
-            using (CodeTypeRepository repoCodeType = new CodeTypeRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await repoCodeType.AddOrUpdateAsync(modelPara);
+                var result = await CodeTypeRepository.AddOrUpdateAsync(visiter, modelPara);
                 return Json(new { isOk = result });
             }
         }
         public async Task<JsonResult> DelCodeType(int typeID)
         {
-            using (CodeTypeRepository repoCodeType = new CodeTypeRepository())
+            using (RepositoryVisiter visiter = new RepositoryVisiter())
             {
-                var result = await repoCodeType.DelCodeTypeAsync(typeID);
+                var result = await CodeTypeRepository.DelCodeTypeAsync(visiter, typeID);
                 return Json(new { isOk = result });
             }
         }
