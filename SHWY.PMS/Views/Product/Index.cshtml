@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "产品管理";
+    Layout = "~/Views/Shared/_BaseContent.cshtml";
+}
+<div id="tb">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="EditProd(0)">新增</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="EditProd(1)">修改</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" onclick="DelProd()">删除</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-daily',plain:true" onclick="ShowLog()">产品日志</a>
+    <span class="l-btn-text">产品名称：</span><input class="easyui-textbox" id="txtProdNameQ" style="width:120px;" />
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="GridReload('load')">查询</a>
+</div>
+<table id="tt"></table>
+<script>
+    function ShowLog() {
+        var row = $("#tt").datagrid("getSelected");
+        if (row == null) {
+            AlertMsg("请选择一行数据后再操作");
+            return;
+        }
+        var topicID = row.ProID;
+        ShowDialogNoSaveCancel("产品日志", 800, 400, "/TopicLog/ProTopicIndex?topic=2&topicID=" + topicID);
+    }
+    $(function () {
+        InitGrid();
+    });
+    function InitGrid() {
+        $("#tt").datagrid({
+            url: '/Product/GetList',
+            columns: [[
+                { field: 'ProID', title: '产品ID', width: 50 },
+                { field: 'NAME', title: '产品名称', width: 180 },
+                { field: 'ALIAS', title: '产品别名', width: 200 }
+            ]],
+            autoRowHeight: false,//定义是否设置基于该行内容的行高度。设置为 false，则可以提高加载性能。
+            striped: true,//设置为 true，则把行条纹化。（即奇偶行使用不同背景色）
+            nowrap: true,//设置为 true，则把数据显示在一行里。设置为 true 可提高加载性能。
+            singleSelect: true,
+            toolbar: '#tb',
+            pagination: true,
+            pageSize: 20,
+            idField: 'ProID',
+            rownumbers: true,
+            fit: true,
+            queryParams: {
+                prodName: ""
+            }
+        });
+    }
+    function GridReload(loaded) {
+        $("#tt").datagrid(loaded, {
+            prodName: $("#txtProdNameQ").val()
+        });
+    }
+    var isAdd = false;
+    function EditProd(prodId) {
+        if (prodId == 0)
+            isAdd = true;
+        else {
+            var row = $("#tt").datagrid("getSelected");
+            if (row == null) {
+                AlertMsg("请选择一行数据后再操作");
+                return;
+            }
+            prodId = row.ProID;
+            isAdd = false;
+        }
+        ShowDialog("产品管理", 600, 400, "/Product/EditProd?prodId=" + prodId, saveProd);
+    }
+    function DelProd(prodId) {
+        $.messager.confirm('提示', "确定要删除吗？", function (r) {
+            if (r) {
+                $.post("/Product/DelProd", { prodId: prodId }, function (result) {
+                    if (result.isOk) {
+                        AlertMsg("删除成功");
+                        GridReload("reload");
+                    }
+                    else {
+                        AlertMsg('删除失败');
+                    }
+                });
+            }
+        });
+    }
+    function saveProd() {
+        var check = $("#formProdEidt").form('enableValidation').form('validate');
+        if (check) {
+            var postData = $("#formProdEidt").serialize();
+            if (isAdd) {
+                $.post("/Product/IsExistsByProId", postData, function (result) {
+                    if (result.isExists) {
+                        AlertMsg("产品编号已存在,请重新输入");
+                    }
+                    else {
+                        SaveData(postData);
+                    }
+                });
+            }
+            else {
+                SaveData(postData);
+            }
+        }
+    }
+    function SaveData(postData) {
+        $.post("/Product/SaveProd", postData, function (result) {
+            if (result.isOk) {
+                $('#PopWindow').dialog('close');
+                $("#PopWindow").remove();
+                GridReload(isAdd ? "load" : "reload");
+            }
+            else {
+                AlertMsg('保存失败');
+            }
+
+        });
+    }
+</script>
+

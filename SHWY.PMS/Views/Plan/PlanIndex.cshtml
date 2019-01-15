@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewBag.Title = "PlanIndex";
+    Layout = "~/Views/Shared/_BaseContent.cshtml";
+}
+
+<table id="tt"></table>
+<div id="tb">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="EditPlan(0)">新增</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="EditPlan(1)">修改</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:true" onclick="DelPlan()">删除</a>
+    <span class="l-btn-text">标题：</span><input class="easyui-textbox" id="txtTitleQ" style="width:180px;" />
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="GridReload('load')">查询</a>
+</div>
+<script>
+    $(function () {
+        InitGrid();
+    });
+    function InitGrid() {
+        $("#tt").datagrid({
+            url: '/Plan/GetPlanListAsync',
+            columns: [[
+                { field: 'PlanID', title: 'PlanID', hidden: true },
+                { field: 'title', title: '计划标题' },
+                { field: 'planTypeName', title: '计划类型' },
+                {
+                    field: 'startTime', title: '开始时间', width: 80, formatter: function (value, row, index) {
+                        return data_string(value, 'yyyy-MM-dd');
+                    }
+                },
+                {
+                    field: 'endTime', title: '结束时间', width: 80, formatter: function (value, row, index) {
+                        return data_string(value, 'yyyy-MM-dd');
+                    }
+                },
+                { field: 'text', title: '详细描述' },
+            ]],
+            autoRowHeight: false,//定义是否设置基于该行内容的行高度。设置为 false，则可以提高加载性能。
+            striped: true,//设置为 true，则把行条纹化。（即奇偶行使用不同背景色）
+            nowrap: true,//设置为 true，则把数据显示在一行里。设置为 true 可提高加载性能。
+            singleSelect: true,
+            pagination: true,
+            pageSize: 20,
+            idField: 'PlanID',
+            toolbar: '#tb',
+            rownumbers: true,
+            fit: true,
+            queryParams: {
+                title:''
+            }
+        });
+    }
+    function GridReload(loaded) {
+        $("#tt").datagrid(loaded, {
+            title: $("#txtTitleQ").val()
+        });
+    }
+    var isAdd = false;
+    function EditPlan(PlanID) {
+        if (PlanID == 0)
+            isAdd = true;
+        else {
+            var row = $("#tt").datagrid("getSelected");
+            if (row == null) {
+                AlertMsg("请选择一行数据后再操作");
+                return;
+            }
+            isAdd = false;
+        }
+        PlanID = isAdd ? "" : row.PlanID;
+        ShowDialog("计划管理", 600, 400, "/Plan/PlanEdit?planID=" + PlanID, savePlan);
+    }
+    function DelPlan() {
+        var row = $("#tt").datagrid("getSelected");
+        if (row == null) {
+            AlertMsg("请选择一行数据后再操作");
+            return;
+        }
+        $.messager.confirm('提示', "确定要删除吗？", function (r) {
+            if (r) {
+                $.post("/Plan/DelPlan", { PlanID: row.PlanID }, function (result) {
+                    if (result.isOk) {
+                        AlertMsg("删除成功");
+                        GridReload("reload");
+                    }
+                    else {
+                        AlertMsg('删除失败');
+                    }
+                });
+            }
+        });
+    }
+    function savePlan() {
+        var check = $("#formPlanEidt").form('enableValidation').form('validate');
+        if (check) {
+            var postData = $("#formPlanEidt").serialize();
+            $.post("/Plan/SavePlan", postData, function (result) {
+                if (result.isOk) {
+                    $('#PopWindow').dialog('close');
+                    $("#PopWindow").remove();
+                    GridReload(isAdd ? "load" : "reload");
+                }
+                else {
+                    AlertMsg('保存失败');
+                }
+
+            });
+        }
+    }
+</script>
+

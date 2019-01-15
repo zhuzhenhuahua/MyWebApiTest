@@ -1,0 +1,27 @@
+﻿@model SHWY.Model.DB.Items
+@{
+    ViewBag.Title = "修改项目";
+    Layout = "~/Views/Shared/_BaseContent.cshtml";
+}
+
+<form id="formItemEidt">
+    <table>
+        <tr>
+            <td>@Html.LabelFor(p => p.partyID)</td>
+            <td>@Html.DropDownListFor(p => p.partyID, ViewBag.PartyList as IEnumerable<SelectListItem>, new { @class = "easyui-combobox", data_options = "editable:false", style = "width:170px;" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(p => p.ItemID)</td>
+            <td>@Html.TextBoxFor(p => p.ItemID, new { @class = "easyui-numberbox", data_options = "required:true,readonly:" + ViewData["isRealOnly"] + "" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(p => p.NAME)</td>
+            <td>@Html.TextBoxFor(p => p.NAME, new { @class = "easyui-textbox", data_options = "required:true" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(p => p.ALIAS)</td>
+            <td>@Html.TextBoxFor(p => p.ALIAS, new { @class = "easyui-textbox" })</td>
+        </tr>
+    </table>
+</form>
+
