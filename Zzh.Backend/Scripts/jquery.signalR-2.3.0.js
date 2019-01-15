@@ -175,19 +175,19 @@
             return version;
         })(),
 
-        error: function (message, source, visiter.context) {
+        error: function (message, source, context) {
             var e = new Error(message);
             e.source = source;
 
-            if (typeof visiter.context !== "undefined") {
-                e.visiter.context = visiter.context;
+            if (typeof context !== "undefined") {
+                e.context = context;
             }
 
             return e;
         },
 
-        transportError: function (message, transport, source, visiter.context) {
-            var e = this.error(message, source, visiter.context);
+        transportError: function (message, transport, source, context) {
+            var e = this.error(message, source, context);
             e.transport = transport ? transport.name : undefined;
             return e;
         },
@@ -1648,12 +1648,12 @@
             }
         },
 
-        handleParseFailure: function (connection, result, error, onFailed, visiter.context) {
+        handleParseFailure: function (connection, result, error, onFailed, context) {
             var wrappedError = signalR._.transportError(
                 signalR._.format(signalR.resources.parseFailed, result),
                 connection.transport,
                 error,
-                visiter.context);
+                context);
 
             // If we're in the initialization phase trigger onFailed, otherwise stop the connection.
             if (onFailed && onFailed(wrappedError)) {

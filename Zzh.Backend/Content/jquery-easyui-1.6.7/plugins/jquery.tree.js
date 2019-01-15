@@ -72,7 +72,7 @@ return;
 _dc(_5,_a[0]);
 _6.onDblClick.call(_5,_c(_5,_a[0]));
 e.stopPropagation();
-}).bind("visiter.contextmenu",function(e){
+}).bind("contextmenu",function(e){
 var _b=$(e.target).closest("div.tree-node");
 if(!_b.length){
 return;

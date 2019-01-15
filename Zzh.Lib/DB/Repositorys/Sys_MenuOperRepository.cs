@@ -14,8 +14,8 @@ namespace Zzh.Lib.DB.Repositorys
         public static async Task<Tuple<int, object>> GetListPager(RepositoryVisiter visiter, int page, int rows, int menuId)
         {
             int from = (page - 1) * rows;
-            var list = await (from j in visiter.context.Sys_MenuOpers
-                              join menu in visiter.context.Sys_Menus on j.MenuId equals menu.MenuId
+            var list = await (from j in visiter.DB.Sys_MenuOpers
+                              join menu in visiter.DB.Sys_Menus on j.MenuId equals menu.MenuId
                               where menuId > 0 ? j.MenuId == menuId : 1 == 1
                               orderby j.MenuId, j.CreateTime descending
                               select new
@@ -27,7 +27,7 @@ namespace Zzh.Lib.DB.Repositorys
                                   MenuName = menu.MenuName
                               }
                               ).Skip(from).Take(rows).ToListAsync();
-            var total = await (from j in visiter.context.Sys_MenuOpers
+            var total = await (from j in visiter.DB.Sys_MenuOpers
                                where menuId > 0 ? j.MenuId == menuId : 1 == 1
                                select j).CountAsync();
             return Tuple.Create(total, list as object);
@@ -35,16 +35,16 @@ namespace Zzh.Lib.DB.Repositorys
         }
         public static async Task<List<Sys_MenuOper>> GetListAsync(RepositoryVisiter visiter)
         {
-            var list = await (from j in visiter.context.Sys_MenuOpers select j).ToListAsync();
+            var list = await (from j in visiter.DB.Sys_MenuOpers select j).ToListAsync();
             return list;
         }
         public static async Task<int> GetListCountAsync(RepositoryVisiter visiter, int menuId)
         {
-            return await visiter.context.Sys_MenuOpers.Where(p => p.MenuId == menuId).CountAsync();
+            return await visiter.DB.Sys_MenuOpers.Where(p => p.MenuId == menuId).CountAsync();
         }
         public static async Task<Sys_MenuOper> GetModelAsync(RepositoryVisiter visiter, int menuOperId)
         {
-            var model = await visiter.context.Sys_MenuOpers.Where(p => p.MenuOperId == menuOperId).FirstOrDefaultAsync();
+            var model = await visiter.DB.Sys_MenuOpers.Where(p => p.MenuOperId == menuOperId).FirstOrDefaultAsync();
             return model;
         }
         public static async Task<bool> AddOrUpdateAsync(RepositoryVisiter visiter, Sys_MenuOper menuOper)
@@ -77,9 +77,9 @@ namespace Zzh.Lib.DB.Repositorys
                     //查出该菜单下共多少个按钮，最后+1为主键
                     int count = await GetListCountAsync(visiter,menuOper.MenuId) + 1;
                     sysMenuOper.MenuOperId = Convert.ToInt32(menuOper.MenuId.ToString() + count.ToString().PadLeft(3, '0'));
-                    visiter.context.Sys_MenuOpers.Add(sysMenuOper);
+                    visiter.DB.Sys_MenuOpers.Add(sysMenuOper);
                 }
-                return await visiter.context.SaveChangesAsync() == 1;
+                return await visiter.DB.SaveChangesAsync() == 1;
             }
             catch (Exception)
             {
@@ -88,11 +88,11 @@ namespace Zzh.Lib.DB.Repositorys
         }
         public static async Task<bool> DelMenuOper(RepositoryVisiter visiter, int menuOperId)
         {
-            var model = await visiter.context.Sys_MenuOpers.Where(p => p.MenuOperId == menuOperId).FirstOrDefaultAsync();
+            var model = await visiter.DB.Sys_MenuOpers.Where(p => p.MenuOperId == menuOperId).FirstOrDefaultAsync();
             if (model == null)
                 return false;
-            visiter.context.Sys_MenuOpers.Remove(model);
-            return await visiter.context.SaveChangesAsync() == 1;
+            visiter.DB.Sys_MenuOpers.Remove(model);
+            return await visiter.DB.SaveChangesAsync() == 1;
         }
     }
 }

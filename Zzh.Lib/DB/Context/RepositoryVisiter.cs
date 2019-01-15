@@ -9,18 +9,18 @@ namespace Zzh.Lib.DB.Context
 {
     public class RepositoryVisiter : IDisposable
     {
-        public readonly ProContext context;
+        public readonly ProContext DB;
 
-        //public ProContext Context => visiter.context;
+        //public ProContext Context => context;
         static object _syncObject = new object();
 
         public RepositoryVisiter()
         {
-            context = new ProContext();
+            DB = new ProContext();
         }
         public RepositoryVisiter(string conn)
         {
-            context = new ProContext(conn);
+            DB = new ProContext(conn);
         }
 
         #region IDisposable Support
@@ -31,7 +31,7 @@ namespace Zzh.Lib.DB.Context
             {
                 if (disposing)
                 {
-                    this.context.Dispose();
+                    this.DB.Dispose();
                 }
                 disposedValue = true;
             }

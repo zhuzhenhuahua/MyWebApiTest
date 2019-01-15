@@ -16,10 +16,10 @@ namespace Zzh.Lib.DB.Repositorys
         public static async Task<Tuple<int, List<Sys_User>>> GetListAsync(RepositoryVisiter visiter, int pageIndex, int pageSize, string userName)
         {
             int from = (pageIndex - 1) * pageSize;
-            int total = await (from j in visiter.context.Sys_Users
+            int total = await (from j in visiter.DB.Sys_Users
                                where userName == "" ? 1 == 1 : j.Name.Contains(userName)
                                select j).CountAsync();
-            var list = await (from j in visiter.context.Sys_Users
+            var list = await (from j in visiter.DB.Sys_Users
                               where userName == "" ? 1 == 1 : j.Name.Contains(userName)
                               orderby j.Uid descending
                               select j).Skip(from).Take(pageSize).ToListAsync();
@@ -37,7 +37,7 @@ namespace Zzh.Lib.DB.Repositorys
         {
             try
             {
-                var user = await (from j in visiter.context.Sys_Users
+                var user = await (from j in visiter.DB.Sys_Users
                                   where j.Uid == uid
                                   select j).FirstOrDefaultAsync();
                 if (user == null)
@@ -55,7 +55,7 @@ namespace Zzh.Lib.DB.Repositorys
                 return dicUserList[uid];
             try
             {
-                var user = await (from j in visiter.context.Sys_Users
+                var user = await (from j in visiter.DB.Sys_Users
                                   where j.Uid == uid
                                   select j).FirstOrDefaultAsync();
                 if (user != null)
@@ -71,19 +71,19 @@ namespace Zzh.Lib.DB.Repositorys
         }
         public static async Task<List<Sys_User>> GetUserListAsync(RepositoryVisiter visiter)
         {
-            var list = await (from j in visiter.context.Sys_Users
+            var list = await (from j in visiter.DB.Sys_Users
                               orderby j.Name
                               select j).ToListAsync();
             return list;
         }
         public static async Task<int> GetUserListCountByRoleID(RepositoryVisiter visiter, int roleID)
         {
-            var total = await visiter.context.Sys_Users.Where(p => p.RoleId == roleID).CountAsync();
+            var total = await visiter.DB.Sys_Users.Where(p => p.RoleId == roleID).CountAsync();
             return total;
         }
         public static async Task<Sys_User> GetUserAsync(RepositoryVisiter visiter, string loginName, string pwd)
         {
-            var user = await (from j in visiter.context.Sys_Users
+            var user = await (from j in visiter.DB.Sys_Users
                               where j.LoginName == loginName && j.PassWord == pwd
                               select j).FirstOrDefaultAsync();
             return user;
@@ -93,7 +93,7 @@ namespace Zzh.Lib.DB.Repositorys
         {
             try
             {
-                var sysUser = await visiter.context.Sys_Users.Where(p => p.Uid == user.Uid).FirstOrDefaultAsync();
+                var sysUser = await visiter.DB.Sys_Users.Where(p => p.Uid == user.Uid).FirstOrDefaultAsync();
                 bool isNew = false;
 
                 if (sysUser == null)
@@ -112,8 +112,8 @@ namespace Zzh.Lib.DB.Repositorys
                     }
                 }
                 if (isNew)
-                    visiter.context.Sys_Users.Add(sysUser);
-                return await visiter.context.SaveChangesAsync() == 1;
+                    visiter.DB.Sys_Users.Add(sysUser);
+                return await visiter.DB.SaveChangesAsync() == 1;
             }
             catch
             {
@@ -122,22 +122,22 @@ namespace Zzh.Lib.DB.Repositorys
         }
         public static async Task<bool> UpdateTheme(RepositoryVisiter visiter, int userID,string theme)
         {
-            var model = await visiter.context.Sys_Users.Where(p => p.Uid == userID).FirstOrDefaultAsync();
+            var model = await visiter.DB.Sys_Users.Where(p => p.Uid == userID).FirstOrDefaultAsync();
             if (model != null)
             {
                 model.Themes = theme;
-                return await visiter.context.SaveChangesAsync() > 0;
+                return await visiter.DB.SaveChangesAsync() > 0;
             }
             return false;
         }
 
         public static async Task<bool> DeleteUser(RepositoryVisiter visiter, int uid)
         {
-            var user = await visiter.context.Sys_Users.Where(p => p.Uid == uid).FirstOrDefaultAsync();
+            var user = await visiter.DB.Sys_Users.Where(p => p.Uid == uid).FirstOrDefaultAsync();
             if (user != null)
             {
-                visiter.context.Sys_Users.Remove(user);
-                return await visiter.context.SaveChangesAsync() == 1;
+                visiter.DB.Sys_Users.Remove(user);
+                return await visiter.DB.SaveChangesAsync() == 1;
             }
             return false;
         }

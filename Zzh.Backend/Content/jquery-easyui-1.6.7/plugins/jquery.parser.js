@@ -345,7 +345,7 @@ _31=false;
 _33(e,"dblclick");
 }
 _2f=setTimeout(function(){
-_33(e,"visiter.contextmenu",3);
+_33(e,"contextmenu",3);
 },1000);
 _33(e,"mousedown");
 if($.fn.draggable.isDragging||$.fn.resizable.isResizing){

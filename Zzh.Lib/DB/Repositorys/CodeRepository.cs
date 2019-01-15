@@ -24,7 +24,7 @@ namespace Zzh.Lib.DB.Repositorys
             {
                 return _dicCodes[typeid];
             }
-            var list = await (from j in visiter.context.Codes
+            var list = await (from j in visiter.DB.Codes
                               where j.TypeId == typeid && j.Status == 1
                               select j).ToListAsync();
             if (list.Count > 0)
@@ -35,7 +35,7 @@ namespace Zzh.Lib.DB.Repositorys
         }
         public static async Task<List<Codes>> GetCodesListAsync(RepositoryVisiter visiter, int typeId)
         {
-            var list = await (from j in visiter.context.Codes
+            var list = await (from j in visiter.DB.Codes
                               where j.TypeId == typeId
                               select j).ToListAsync();
             return list;
@@ -51,7 +51,7 @@ namespace Zzh.Lib.DB.Repositorys
                 return codeModel.Text;
             }
             int typID = Convert.ToInt32(typeid);
-            var codeList = await (from j in visiter.context.Codes
+            var codeList = await (from j in visiter.DB.Codes
                                   where j.TypeId == typID
                                   select j).ToListAsync();
             if (codeList.Count>0)
@@ -63,13 +63,13 @@ namespace Zzh.Lib.DB.Repositorys
         }
         public static async Task<Codes> GetCodeAsync(RepositoryVisiter visiter, int codeId)
         {
-            var model = await visiter.context.Codes.Where(p => p.Id == codeId).FirstOrDefaultAsync();
+            var model = await visiter.DB.Codes.Where(p => p.Id == codeId).FirstOrDefaultAsync();
             return model;
         }
         public static async Task<bool> AddOrUpdateCode(RepositoryVisiter visiter, Codes codePara)
         {
             var isAdd = false;
-            var model = await visiter.context.Codes.Where(p => p.Id == codePara.Id).FirstOrDefaultAsync();
+            var model = await visiter.DB.Codes.Where(p => p.Id == codePara.Id).FirstOrDefaultAsync();
             if (model == null)
             {
                 isAdd = true;
@@ -79,8 +79,8 @@ namespace Zzh.Lib.DB.Repositorys
             model.Text = codePara.Text;
             model.Status = codePara.Status;
             if (isAdd)
-                visiter.context.Codes.Add(model);
-            int res = await visiter.context.SaveChangesAsync();
+                visiter.DB.Codes.Add(model);
+            int res = await visiter.DB.SaveChangesAsync();
             if (res > 0)
             {
                 var listCode = new List<Codes>();

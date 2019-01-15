@@ -13,7 +13,7 @@ namespace Zzh.Lib.DB.Repositorys
     {
         public static async Task<List<Sys_RoleOper>> GetListAsync(RepositoryVisiter visiter, int roleId)
         {
-            return await visiter.context.Sys_RoleOpers.Where(p => p.RoleId == roleId).ToListAsync();
+            return await visiter.DB.Sys_RoleOpers.Where(p => p.RoleId == roleId).ToListAsync();
         }
     }
 }

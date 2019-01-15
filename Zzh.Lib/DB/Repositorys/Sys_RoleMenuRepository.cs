@@ -15,10 +15,10 @@ namespace Zzh.Lib.DB.Repositorys
         {
             try
             {
-                var roleMenus = await visiter.context.Sys_RoleMenus.Where(p => p.RoleId == rid).ToListAsync();
-                visiter.context.Sys_RoleMenus.RemoveRange(roleMenus);//先全部删除该角色下所有的菜单权限
-                var roleMenuOper = await visiter.context.Sys_RoleOpers.Where(p => p.RoleId == rid).ToListAsync();
-                visiter.context.Sys_RoleOpers.RemoveRange(roleMenuOper);//先全部删除该角色下所有的操作权限
+                var roleMenus = await visiter.DB.Sys_RoleMenus.Where(p => p.RoleId == rid).ToListAsync();
+                visiter.DB.Sys_RoleMenus.RemoveRange(roleMenus);//先全部删除该角色下所有的菜单权限
+                var roleMenuOper = await visiter.DB.Sys_RoleOpers.Where(p => p.RoleId == rid).ToListAsync();
+                visiter.DB.Sys_RoleOpers.RemoveRange(roleMenuOper);//先全部删除该角色下所有的操作权限
                 var menuOperList = await Sys_MenuOperRepository.GetListAsync(visiter);//所有的实体，用于获取menuID
                 //await context.SaveChangesAsync();
                 foreach (int menuid in menuListId)
@@ -30,7 +30,7 @@ namespace Zzh.Lib.DB.Repositorys
                         newRoleOper.RoleId = rid;
                         newRoleOper.MenuId = menuOperList.Where(p => p.MenuOperId == menuid).FirstOrDefault().MenuId;
                         newRoleOper.MenuOperId = menuid;
-                        visiter.context.Sys_RoleOpers.Add(newRoleOper);
+                        visiter.DB.Sys_RoleOpers.Add(newRoleOper);
                     }
                     else
                     {
@@ -38,10 +38,10 @@ namespace Zzh.Lib.DB.Repositorys
                         var newRoleMenu = new Sys_RoleMenu();
                         newRoleMenu.RoleId = rid;
                         newRoleMenu.MenuId = menuid;
-                        visiter.context.Sys_RoleMenus.Add(newRoleMenu);
+                        visiter.DB.Sys_RoleMenus.Add(newRoleMenu);
                     }
                 }
-                int s = await visiter.context.SaveChangesAsync();
+                int s = await visiter.DB.SaveChangesAsync();
                 return s > 0;
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace Zzh.Lib.DB.Repositorys
         }
         public static async Task<List<Sys_RoleMenu>> GetListAsync(RepositoryVisiter visiter, int rid)
         {
-            return await visiter.context.Sys_RoleMenus.Where(p => p.RoleId == rid).ToListAsync();
+            return await visiter.DB.Sys_RoleMenus.Where(p => p.RoleId == rid).ToListAsync();
         }
     }
 }

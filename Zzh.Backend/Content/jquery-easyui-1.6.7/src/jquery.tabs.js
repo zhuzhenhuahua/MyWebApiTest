@@ -299,7 +299,7 @@
 				}
 				return false;
 			}
-		}).bind('visiter.contextmenu', function(e){
+		}).bind('contextmenu', function(e){
 			var li = $(e.target).closest('li');
 			if (li.hasClass('tabs-disabled')){return;}
 			if (li.length){

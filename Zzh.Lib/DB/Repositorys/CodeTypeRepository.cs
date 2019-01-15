@@ -15,11 +15,11 @@ namespace Zzh.Lib.DB.Repositorys
         public static async Task<Tuple<int, List<CodeType>>> GetCodeTypeListAsync(RepositoryVisiter visiter, int page, int rows, string typeName)
         {
             int pageIndex = (page - 1) * rows;
-            var total = await (from j in visiter.context.CodeTypes
+            var total = await (from j in visiter.DB.CodeTypes
                                where j.IsDelete == 0
                                && (string.IsNullOrEmpty(typeName) ? 1 == 1 : j.TypeName.Contains(typeName))
                                select j).CountAsync();
-            var list = await (from j in visiter.context.CodeTypes
+            var list = await (from j in visiter.DB.CodeTypes
                               where j.IsDelete == 0
                               && (string.IsNullOrEmpty(typeName) ? 1 == 1 : j.TypeName.Contains(typeName))
                               orderby j.TypeId descending
@@ -28,13 +28,13 @@ namespace Zzh.Lib.DB.Repositorys
         }
         public static async Task<CodeType> GetCodeTypeAsync(RepositoryVisiter visiter, int typeId)
         {
-            var model = await visiter.context.CodeTypes.Where(p => p.TypeId == typeId).FirstOrDefaultAsync();
+            var model = await visiter.DB.CodeTypes.Where(p => p.TypeId == typeId).FirstOrDefaultAsync();
             return model;
         }
         public static async Task<bool> AddOrUpdateAsync(RepositoryVisiter visiter, CodeType modelPara)
         {
             var isAdd = false;
-            var model = await visiter.context.CodeTypes.Where(p => p.TypeId == modelPara.TypeId).FirstOrDefaultAsync();
+            var model = await visiter.DB.CodeTypes.Where(p => p.TypeId == modelPara.TypeId).FirstOrDefaultAsync();
             if (model == null)
             {
                 isAdd = true;
@@ -43,16 +43,16 @@ namespace Zzh.Lib.DB.Repositorys
             model.TypeName = modelPara.TypeName;
             model.Remark = modelPara.Remark;
             if (isAdd)
-                visiter.context.CodeTypes.Add(model);
-            return await visiter.context.SaveChangesAsync() > 0;
+                visiter.DB.CodeTypes.Add(model);
+            return await visiter.DB.SaveChangesAsync() > 0;
         }
         public static async Task<bool> DelCodeTypeAsync(RepositoryVisiter visiter,int typeID)
         {
-            var model = await visiter.context.CodeTypes.Where(p => p.TypeId == typeID).FirstOrDefaultAsync();
+            var model = await visiter.DB.CodeTypes.Where(p => p.TypeId == typeID).FirstOrDefaultAsync();
             if (model != null)
             {
                 model.IsDelete = 1;
-                return await visiter.context.SaveChangesAsync() > 0;
+                return await visiter.DB.SaveChangesAsync() > 0;
             }
             return false;
         }

@@ -1494,7 +1494,7 @@ var Microsoft;
                 User.prototype.setAuthenticatedUserContext = function (authenticatedUserId, accountId) {
                     var isInvalidInput = !this.validateUserInput(authenticatedUserId) || (accountId && !this.validateUserInput(accountId));
                     if (isInvalidInput) {
-                        ApplicationInsights._InternalLogging.throwInternalUserActionable(ApplicationInsights.LoggingSeverity.WARNING, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.USRACT_SetAuthContextFailedAccountName, "Setting auth user visiter.context failed. " +
+                        ApplicationInsights._InternalLogging.throwInternalUserActionable(ApplicationInsights.LoggingSeverity.WARNING, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.USRACT_SetAuthContextFailedAccountName, "Setting auth user context failed. " +
                             "User auth/account id should be of type string, and not contain commas, semi-colons, equal signs, spaces, or vertical-bars."));
                         return;
                     }
@@ -3024,7 +3024,7 @@ var Microsoft;
         })(Telemetry = ApplicationInsights.Telemetry || (ApplicationInsights.Telemetry = {}));
     })(ApplicationInsights = Microsoft.ApplicationInsights || (Microsoft.ApplicationInsights = {}));
 })(Microsoft || (Microsoft = {}));
-/// <reference path="telemetryvisiter.context.ts" />
+/// <reference path="telemetrycontext.ts" />
 /// <reference path="./Telemetry/Common/Data.ts"/>
 /// <reference path="./Util.ts"/>
 /// <reference path="./Contracts/Generated/SessionState.ts"/>
@@ -3068,7 +3068,7 @@ var Microsoft;
                     sampleRate: function () { return _this.config.samplingPercentage; },
                     cookieDomain: function () { return _this.config.cookieDomain; }
                 };
-                this.visiter.context = new ApplicationInsights.TelemetryContext(configGetters);
+                this.context = new ApplicationInsights.TelemetryContext(configGetters);
                 this._pageViewManager = new Microsoft.ApplicationInsights.Telemetry.PageViewManager(this, this.config.overridePageViewDuration);
                 this._eventTracking = new Timing("trackEvent");
                 this._eventTracking.action = function (name, url, duration, properties, measurements) {
@@ -3083,7 +3083,7 @@ var Microsoft;
                     var event = new ApplicationInsights.Telemetry.Event(name, properties, measurements);
                     var data = new ApplicationInsights.Telemetry.Common.Data(ApplicationInsights.Telemetry.Event.dataType, event);
                     var envelope = new ApplicationInsights.Telemetry.Common.Envelope(data, ApplicationInsights.Telemetry.Event.envelopeType);
-                    _this.visiter.context.track(envelope);
+                    _this.context.track(envelope);
                 };
                 this._pageTracking = new Timing("trackPageView");
                 this._pageTracking.action = function (name, url, duration, properties, measurements) {
@@ -3098,13 +3098,13 @@ var Microsoft;
                 var pageView = new ApplicationInsights.Telemetry.PageView(name, url, duration, properties, measurements);
                 var data = new ApplicationInsights.Telemetry.Common.Data(ApplicationInsights.Telemetry.PageView.dataType, pageView);
                 var envelope = new ApplicationInsights.Telemetry.Common.Envelope(data, ApplicationInsights.Telemetry.PageView.envelopeType);
-                this.visiter.context.track(envelope);
+                this.context.track(envelope);
                 this._trackAjaxAttempts = 0;
             };
             AppInsights.prototype.sendPageViewPerformanceInternal = function (pageViewPerformance) {
                 var pageViewPerformanceData = new ApplicationInsights.Telemetry.Common.Data(ApplicationInsights.Telemetry.PageViewPerformance.dataType, pageViewPerformance);
                 var pageViewPerformanceEnvelope = new ApplicationInsights.Telemetry.Common.Envelope(pageViewPerformanceData, ApplicationInsights.Telemetry.PageViewPerformance.envelopeType);
-                this.visiter.context.track(pageViewPerformanceEnvelope);
+                this.context.track(pageViewPerformanceEnvelope);
             };
             AppInsights.prototype.startTrackPage = function (name) {
                 try {
@@ -3166,7 +3166,7 @@ var Microsoft;
                     var eventTelemetry = new ApplicationInsights.Telemetry.Event(name, properties, measurements);
                     var data = new ApplicationInsights.Telemetry.Common.Data(ApplicationInsights.Telemetry.Event.dataType, eventTelemetry);
                     var envelope = new ApplicationInsights.Telemetry.Common.Envelope(data, ApplicationInsights.Telemetry.Event.envelopeType);
-                    this.visiter.context.track(envelope);
+                    this.context.track(envelope);
                 }
                 catch (e) {
                     ApplicationInsights._InternalLogging.throwInternalNonUserActionable(ApplicationInsights.LoggingSeverity.CRITICAL, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.NONUSRACT_TrackEventFailed, "trackEvent failed, event will not be collected: " + ApplicationInsights.Util.getExceptionName(e), { exception: ApplicationInsights.Util.dump(e) }));
@@ -3178,7 +3178,7 @@ var Microsoft;
                     var dependency = new ApplicationInsights.Telemetry.RemoteDependencyData(id, absoluteUrl, pathName, totalTime, success, resultCode);
                     var dependencyData = new ApplicationInsights.Telemetry.Common.Data(ApplicationInsights.Telemetry.RemoteDependencyData.dataType, dependency);
                     var envelope = new ApplicationInsights.Telemetry.Common.Envelope(dependencyData, ApplicationInsights.Telemetry.RemoteDependencyData.envelopeType);
-                    this.visiter.context.track(envelope);
+                    this.context.track(envelope);
                 }
                 else if (this._trackAjaxAttempts === this.config.maxAjaxCallsPerView) {
                     ApplicationInsights._InternalLogging.throwInternalUserActionable(ApplicationInsights.LoggingSeverity.CRITICAL, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.USRACT_MaxAjaxPerPVExceeded, "Maximum ajax per page view limit reached, ajax monitoring is paused until the next trackPageView(). In order to increase the limit set the maxAjaxCallsPerView configuration parameter."));
@@ -3198,7 +3198,7 @@ var Microsoft;
                     var exceptionTelemetry = new ApplicationInsights.Telemetry.Exception(exception, handledAt, properties, measurements);
                     var data = new ApplicationInsights.Telemetry.Common.Data(ApplicationInsights.Telemetry.Exception.dataType, exceptionTelemetry);
                     var envelope = new ApplicationInsights.Telemetry.Common.Envelope(data, ApplicationInsights.Telemetry.Exception.envelopeType);
-                    this.visiter.context.track(envelope);
+                    this.context.track(envelope);
                 }
                 catch (e) {
                     ApplicationInsights._InternalLogging.throwInternalNonUserActionable(ApplicationInsights.LoggingSeverity.CRITICAL, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.NONUSRACT_TrackExceptionFailed, "trackException failed, exception will not be collected: " + ApplicationInsights.Util.getExceptionName(e), { exception: ApplicationInsights.Util.dump(e) }));
@@ -3209,7 +3209,7 @@ var Microsoft;
                     var telemetry = new ApplicationInsights.Telemetry.Metric(name, average, sampleCount, min, max, properties);
                     var data = new ApplicationInsights.Telemetry.Common.Data(ApplicationInsights.Telemetry.Metric.dataType, telemetry);
                     var envelope = new ApplicationInsights.Telemetry.Common.Envelope(data, ApplicationInsights.Telemetry.Metric.envelopeType);
-                    this.visiter.context.track(envelope);
+                    this.context.track(envelope);
                 }
                 catch (e) {
                     ApplicationInsights._InternalLogging.throwInternalNonUserActionable(ApplicationInsights.LoggingSeverity.CRITICAL, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.NONUSRACT_TrackMetricFailed, "trackMetric failed, metric will not be collected: " + ApplicationInsights.Util.getExceptionName(e), { exception: ApplicationInsights.Util.dump(e) }));
@@ -3220,7 +3220,7 @@ var Microsoft;
                     var telemetry = new ApplicationInsights.Telemetry.Trace(message, properties);
                     var data = new ApplicationInsights.Telemetry.Common.Data(ApplicationInsights.Telemetry.Trace.dataType, telemetry);
                     var envelope = new ApplicationInsights.Telemetry.Common.Envelope(data, ApplicationInsights.Telemetry.Trace.envelopeType);
-                    this.visiter.context.track(envelope);
+                    this.context.track(envelope);
                 }
                 catch (e) {
                     ApplicationInsights._InternalLogging.throwInternalNonUserActionable(ApplicationInsights.LoggingSeverity.WARNING, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.NONUSRACT_TrackTraceFailed, "trackTrace failed, trace will not be collected: " + ApplicationInsights.Util.getExceptionName(e), { exception: ApplicationInsights.Util.dump(e) }));
@@ -3232,7 +3232,7 @@ var Microsoft;
             };
             AppInsights.prototype.flush = function () {
                 try {
-                    this.visiter.context._sender.triggerSend();
+                    this.context._sender.triggerSend();
                 }
                 catch (e) {
                     ApplicationInsights._InternalLogging.throwInternalNonUserActionable(ApplicationInsights.LoggingSeverity.CRITICAL, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.NONUSRACT_FlushFailed, "flush failed, telemetry will not be collected: " + ApplicationInsights.Util.getExceptionName(e), { exception: ApplicationInsights.Util.dump(e) }));
@@ -3240,18 +3240,18 @@ var Microsoft;
             };
             AppInsights.prototype.setAuthenticatedUserContext = function (authenticatedUserId, accountId) {
                 try {
-                    this.visiter.context.user.setAuthenticatedUserContext(authenticatedUserId, accountId);
+                    this.context.user.setAuthenticatedUserContext(authenticatedUserId, accountId);
                 }
                 catch (e) {
-                    ApplicationInsights._InternalLogging.throwInternalUserActionable(ApplicationInsights.LoggingSeverity.WARNING, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.USRACT_SetAuthContextFailed, "Setting auth user visiter.context failed. " + ApplicationInsights.Util.getExceptionName(e), { exception: ApplicationInsights.Util.dump(e) }));
+                    ApplicationInsights._InternalLogging.throwInternalUserActionable(ApplicationInsights.LoggingSeverity.WARNING, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.USRACT_SetAuthContextFailed, "Setting auth user context failed. " + ApplicationInsights.Util.getExceptionName(e), { exception: ApplicationInsights.Util.dump(e) }));
                 }
             };
             AppInsights.prototype.clearAuthenticatedUserContext = function () {
                 try {
-                    this.visiter.context.user.clearAuthenticatedUserContext();
+                    this.context.user.clearAuthenticatedUserContext();
                 }
                 catch (e) {
-                    ApplicationInsights._InternalLogging.throwInternalUserActionable(ApplicationInsights.LoggingSeverity.WARNING, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.USRACT_SetAuthContextFailed, "Clearing auth user visiter.context failed. " + ApplicationInsights.Util.getExceptionName(e), { exception: ApplicationInsights.Util.dump(e) }));
+                    ApplicationInsights._InternalLogging.throwInternalUserActionable(ApplicationInsights.LoggingSeverity.WARNING, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.USRACT_SetAuthContextFailed, "Clearing auth user context failed. " + ApplicationInsights.Util.getExceptionName(e), { exception: ApplicationInsights.Util.dump(e) }));
                 }
             };
             AppInsights.prototype.SendCORSException = function (properties) {
@@ -3259,7 +3259,7 @@ var Microsoft;
                 exceptionData.properties = properties;
                 var data = new ApplicationInsights.Telemetry.Common.Data(ApplicationInsights.Telemetry.Exception.dataType, exceptionData);
                 var envelope = new ApplicationInsights.Telemetry.Common.Envelope(data, ApplicationInsights.Telemetry.Exception.envelopeType);
-                this.visiter.context.track(envelope);
+                this.context.track(envelope);
             };
             AppInsights.prototype._onerror = function (message, url, lineNumber, columnNumber, error) {
                 try {
@@ -3446,8 +3446,8 @@ var Microsoft;
                 // Add callback to push events when the user navigates away
                 if (!appInsightsInstance.config.disableFlushOnBeforeUnload && ('onbeforeunload' in window)) {
                     var performHousekeeping = function () {
-                        appInsightsInstance.visiter.context._sender.triggerSend();
-                        appInsightsInstance.visiter.context._sessionManager.backup();
+                        appInsightsInstance.context._sender.triggerSend();
+                        appInsightsInstance.context._sessionManager.backup();
                     };
                     if (!Microsoft.ApplicationInsights.Util.addEventHandler('beforeunload', performHousekeeping)) {
                         Microsoft.ApplicationInsights._InternalLogging.throwInternalNonUserActionable(Microsoft.ApplicationInsights.LoggingSeverity.CRITICAL, new ApplicationInsights._InternalLogMessage(ApplicationInsights._InternalMessageId.NONUSRACT_FailedToAddHandlerForOnBeforeUnload, 'Could not add handler for beforeunload'));
