@@ -43,5 +43,6 @@ namespace Zzh.Lib.DB.Context
         public DbSet<Sys_RoleMenu> Sys_RoleMenus { get; set; }
         public DbSet<Sys_RoleOper> Sys_RoleOpers { get; set; }
         public DbSet<Codes> Codes { get; set; }
+        public DbSet<jlg2> jlg2s { get; set; }
     }
 }

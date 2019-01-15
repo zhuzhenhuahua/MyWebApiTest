@@ -221,6 +221,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DataGridController.cs" />
+    <Compile Include="Controllers\Demo\EChartsController.cs" />
     <Compile Include="Controllers\Demo\MvcPagerController.cs" />
     <Compile Include="Controllers\Demo\OperFileController.cs" />
     <Compile Include="Controllers\Demo\SignalRController.cs" />
@@ -2371,7 +2372,7 @@
     <None Include="Properties\PublishProfiles\PMSWeb.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\Common.js" />
-    <Content Include="Scripts\echarts.common.min.js" />
+    <Content Include="Scripts\echarts.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -2425,6 +2426,8 @@
     <Content Include="Views\MvcPager\Index.cshtml" />
     <Content Include="Views\MvcPager\PartialIndex.cshtml" />
     <Content Include="Views\MvcPager\_partialList.cshtml" />
+    <Content Include="Views\ECharts\Index.cshtml" />
+    <Content Include="Views\Shared\_BaseEChartsContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\Parameters\" />

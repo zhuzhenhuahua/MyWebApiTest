@@ -11,7 +11,6 @@ namespace Zzh.Lib.DB.Repositorys
     {
         public readonly ProContext context;
 
-        //public ProContext Context => context;
         static object _syncObject = new object();
 
         public BaseRepository()
@@ -60,10 +59,6 @@ namespace Zzh.Lib.DB.Repositorys
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        #endregion
-
-        #region 公共虚方法
-
         #endregion
     }
 }

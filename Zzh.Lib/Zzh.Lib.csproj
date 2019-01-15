@@ -79,6 +79,7 @@
     <Compile Include="DB\Repositorys\BaseORCLRepository.cs" />
     <Compile Include="DB\Repositorys\BaseRepository.cs" />
     <Compile Include="DB\Repositorys\CodeRepository.cs" />
+    <Compile Include="DB\Repositorys\jlgRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_MenuOperRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_MenuRepository.cs" />
     <Compile Include="DB\Repositorys\Sys_RoleMenuRepository.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Util\MDConfigurationManager.cs" />
     <Compile Include="Util\JsonResponseHelper.cs" />
     <Compile Include="Util\QQEmailHelper.cs" />
+    <Compile Include="Util\ServerFileHelper.cs" />
     <Compile Include="Util\XMLHelper.cs" />
   </ItemGroup>
   <ItemGroup>
