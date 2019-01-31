@@ -44,5 +44,6 @@ namespace Zzh.Lib.DB.Context
         public DbSet<Sys_RoleOper> Sys_RoleOpers { get; set; }
         public DbSet<CodeType> CodeTypes { get; set; }
         public DbSet<Codes> Codes { get; set; }
+        public DbSet<Sys_Areas> Sys_Areas { get; set; }
     }
 }

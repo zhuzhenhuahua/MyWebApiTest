@@ -86,5 +86,18 @@ namespace Zzh.Lib.Util
             }
         }
         #endregion
+
+        public static string GetXmlNodeValue(string xmlPath, string elementName,string nodeName)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(xmlPath);
+            XmlNode root = doc.SelectSingleNode(elementName);
+            if (root != null) {
+                string id = root.SelectSingleNode(nodeName).InnerText;
+                  return id;
+            }
+            return string.Empty;
+          
+        }
     }
 }

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SettingsConfig>
+  <SysMangerDBSetting>
+    <ProviderName>System.Data.SqlClient</ProviderName>
+    <ConnectionString>Persist Security Info=False;User ID=sa;Password=shwy@027Pwd;Initial Catalog=CompanyManager;Data Source=123.56.188.50;</ConnectionString>
+  </SysMangerDBSetting>
+  <StaticDataDBSetting>
+    <ProviderName>SQLOLEDB.1</ProviderName>
+    <ConnectionString>Provider=SQLOLEDB.1;Persist Security Info=False;User ID=sa;Password=shwy@027Pwd;Initial Catalog=CompanyManager;Data Source=123.56.188.50;</ConnectionString>
+  </StaticDataDBSetting>
+</SettingsConfig>
