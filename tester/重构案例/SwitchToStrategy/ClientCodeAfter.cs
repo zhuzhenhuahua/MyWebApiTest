@@ -34,6 +34,7 @@ namespace tester.重构案例.SwitchToStrategy.After
         {
             return ShippingCalculations[state].Calculate();
         }
+
     }
     public interface IShippingCalculation
     {

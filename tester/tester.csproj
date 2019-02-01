@@ -66,6 +66,13 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="设计模式\行为型\策略模式\StrategyContext.cs" />
+    <Compile Include="设计模式\行为型\策略模式\IStrategy.cs" />
+    <Compile Include="设计模式\行为型\策略模式\OperationAdd.cs" />
+    <Compile Include="设计模式\行为型\策略模式\OperationMultiply.cs" />
+    <Compile Include="设计模式\行为型\策略模式\OperationSunstract.cs" />
+    <Compile Include="设计模式\行为型\观察者模式\Observer.cs" />
+    <Compile Include="设计模式\行为型\观察者模式\Subject.cs" />
     <Compile Include="重构案例\SwitchToStrategy\ClientCodeBefore.cs" />
     <Compile Include="重构案例\SwitchToStrategy\ClientCodeAfter.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -113,6 +120,7 @@
       <Name>Zzh.Model</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

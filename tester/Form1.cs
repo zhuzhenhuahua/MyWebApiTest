@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using tester.设计模式.行为型.策略模式;
+using tester.设计模式.行为型.观察者模式;
 using tester.重构案例.SwitchToStrategy.After;
 using tester.重构案例.SwitchToStrategy.Before;
 using Zzh.Lib.DB.Context;
@@ -23,16 +25,15 @@ namespace tester
 
         private void button1_Click(object sender, EventArgs e)
         {
+
         }
         List<Sys_Areas> areaList = new List<Sys_Areas>();
         private void Form1_Load(object sender, EventArgs e)
         {
             ClientCodeBefore before = new ClientCodeBefore();
-            before.GetPrice(重构案例.SwitchToStrategy.Before.State.NewYork);
+            var p1 = before.GetPrice(重构案例.SwitchToStrategy.Before.State.NewYork);
             ClientCodeAfter after = new ClientCodeAfter();
-            after.GetPrice(重构案例.SwitchToStrategy.After.State.NewYork);
-
-
+            var p2 = after.GetPrice(重构案例.SwitchToStrategy.After.State.NewYork);
             //using (NLiteDBContex visiter = new NLiteDBContex())
             //{
             //    areaList = visiter.Sys_Areas.ToList();
@@ -69,6 +70,23 @@ namespace tester
         static void InitializeEQueue()
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //主要解决：在有多种算法相似的情况下，使用 if...else 所带来的复杂和难以维护。
+            StrategyContext contex = new StrategyContext(new OperationMultiply());
+            var res = contex.executeStrategy(10, 2);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //通常用于一对多修改时，修改表头时，自动修改表体值
+            Subject subject = new Subject();
+            new BinaryObserver(subject);
+            new OctalObserver(subject);
+            subject.setState(15);
+            subject.setState(10);
         }
     }
 }
