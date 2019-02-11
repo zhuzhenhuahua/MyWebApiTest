@@ -81,12 +81,25 @@ namespace tester
 
         private void button3_Click(object sender, EventArgs e)
         {
-            //通常用于一对多修改时，修改表头时，自动修改表体值
+            //通常用于一对多修改时，当一个对象发生改变时，所有依赖与他的对象都得到通知并被自动更新
             Subject subject = new Subject();
             new BinaryObserver(subject);
             new OctalObserver(subject);
             subject.setState(15);
             subject.setState(10);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string[] fruits = { "apple", "banana", "mango","orange", "passionfruit", "grape" };
+            string fruit1 = fruits.AsQueryable().SingleOrDefault(p => p.Length > 10);
+            string fruit111 = fruits.AsQueryable().FirstOrDefault(p => p.Length > 1);
+            string fruit11 = fruits.Where(p => p.Length > 10).SingleOrDefault();
+            string fruit2 = fruits.SingleOrDefault(p => p.Length > 15);
+            double ds1 = Math.Round(2.5);//2
+            double ds2 = Math.Round(3.5);//4
+            double ds3 = Math.Round(2.3);//2
+            double ds4 = Math.Round(2.6);//3
         }
     }
 }

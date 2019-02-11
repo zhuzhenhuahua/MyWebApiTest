@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zzh.Utility", "Zzh.Utility\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tester", "tester\tester.csproj", "{6BD2731E-2B37-41B3-9E21-3E82664C2653}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPClient", "TCPClient\TCPClient.csproj", "{D63682F3-0CFE-495A-ACBB-50B45E0F7D85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zzh.Socket", "Zzh.Socket\Zzh.Socket.csproj", "{9C5F99F7-875B-4FFA-99E6-F53680E6F3A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{6BD2731E-2B37-41B3-9E21-3E82664C2653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BD2731E-2B37-41B3-9E21-3E82664C2653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BD2731E-2B37-41B3-9E21-3E82664C2653}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D63682F3-0CFE-495A-ACBB-50B45E0F7D85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D63682F3-0CFE-495A-ACBB-50B45E0F7D85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D63682F3-0CFE-495A-ACBB-50B45E0F7D85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D63682F3-0CFE-495A-ACBB-50B45E0F7D85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C5F99F7-875B-4FFA-99E6-F53680E6F3A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C5F99F7-875B-4FFA-99E6-F53680E6F3A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C5F99F7-875B-4FFA-99E6-F53680E6F3A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C5F99F7-875B-4FFA-99E6-F53680E6F3A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
