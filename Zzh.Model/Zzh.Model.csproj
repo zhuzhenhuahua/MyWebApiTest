@@ -61,6 +61,7 @@
     <Compile Include="DB\CodeType.cs" />
     <Compile Include="DB\Configuration\ActConfig.cs" />
     <Compile Include="DB\Configuration\Att\ConfigAttribute.cs" />
+    <Compile Include="DB\dm_drillBrand.cs" />
     <Compile Include="DB\NewFolder1\Order.cs" />
     <Compile Include="DB\sysuserNlite.cs" />
     <Compile Include="DB\Sys_Areas.cs" />

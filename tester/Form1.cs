@@ -101,5 +101,19 @@ namespace tester
             double ds3 = Math.Round(2.3);//2
             double ds4 = Math.Round(2.6);//3
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            using (MDBContext db=new Zzh.Lib.DB.Context.MDBContext ())
+            {
+                var list = db.dm_drillBrands.ToList();
+
+                //add
+                dm_drillBrand model = new dm_drillBrand() { code = "zzh", name = "朱振华", ID = 1 };
+                db.dm_drillBrands.Add(model);
+                int result = db.SaveChanges();
+
+            }
+        }
     }
 }

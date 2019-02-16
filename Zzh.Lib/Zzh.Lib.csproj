@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DB\Context\MDBContext.cs" />
     <Compile Include="DB\Context\NLiteDBContex.cs" />
     <Compile Include="DB\Context\ProContext.cs" />
     <Compile Include="DB\Context\RepositoryVisiter.cs" />
