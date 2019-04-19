@@ -1,0 +1,13 @@
+﻿@using DevExpress.Web.Mvc;
+@using DevExpress.Web.Mvc.UI;
+@using DevExpress.Web.Mvc.RichEdit;
+@using DevExpress.XtraRichEdit;
+@{
+    ViewBag.Title = "WordView";
+    Layout = "~/Views/Shared/_BaseContent.cshtml";
+}
+@Html.DevExpress().RichEdit(settings => {
+    settings.Name = "RichEdit";
+    settings.CallbackRouteValues = new { Controller = "Document", Action = "WordView" };
+
+}).Open(Server.MapPath("~/App_Data/0014.docx")).GetHtml()

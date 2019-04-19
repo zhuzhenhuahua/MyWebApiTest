@@ -30,18 +30,18 @@ namespace Zzh.Lib.Util
                 Message = message;
             }
         }
-        public enum ECustomStatus
-        {
-            InvalidArguments,
-            Forbidden,
-            Inactive,
-            Success,
-            WrongPassowrd,
-            NotFound,
-            AccountExist,
-            Fail,
-            ErrorValidationCode,
-            NoValidationCode,
-        }
+    }
+    public enum ECustomStatus
+    {
+        InvalidArguments,
+        Forbidden,
+        Inactive,
+        Success,
+        WrongPassowrd,
+        NotFound,
+        AccountExist,
+        Fail,
+        ErrorValidationCode,
+        NoValidationCode,
     }
 }

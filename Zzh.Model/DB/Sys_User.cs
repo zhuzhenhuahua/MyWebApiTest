@@ -13,7 +13,7 @@ namespace Zzh.Model.DB
     [Table("Sys_User")]
    public class Sys_User
     {
-        [Key]
+        [Key,DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Uid { get; set; }
         [DisplayName("姓名")]
         public string Name { get; set; }
